@@ -1,0 +1,10 @@
+query account ($domain: String!) {
+  account(where: {
+    domain: $domain
+  } ) {
+    dashboard {
+      title
+      cards
+    }
+  }
+}

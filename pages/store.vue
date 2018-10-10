@@ -1,0 +1,9 @@
+<template>
+  <pre>{{ $store.state }}</pre>
+</template>
+
+<script>
+export default {
+  layout: 'empty'
+}
+</script>
