@@ -1,9 +1,11 @@
 import account from '~/apollo/queries/account'
+import { getHostName } from '~/utils/hostname'
 
 export default async function({ isServer, req, app, store }) {
   if (isServer || !req) return
 
-  const host = req.headers.host
+  const referrer = req.headers.referrer
+  const host = referrer ? getHostName(referrer) : req.headers.host
 
   await app.apolloProvider.clients.defaultClient
     .query({
