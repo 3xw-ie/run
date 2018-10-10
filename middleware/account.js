@@ -4,8 +4,8 @@ import { getHostName } from '~/utils/hostname'
 export default async function({ isServer, req, app, store }) {
   if (isServer || !req) return
 
-  const referrer = req.headers.referrer
-  const host = referrer ? getHostName(referrer) : 'fuck'
+  const referer = req.headers.referer
+  const host = referer ? getHostName(referer) : req.headers.host
 
   await app.apolloProvider.clients.defaultClient
     .query({
@@ -15,7 +15,7 @@ export default async function({ isServer, req, app, store }) {
       }
     })
     .then(response => store.commit('SET_ACCOUNT', response.data.account))
-  // .catch(error => store.commit('', error.toString()))
+    .catch(error => console.log(error))
 
   store.commit('test', host)
 }
