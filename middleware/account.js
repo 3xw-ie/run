@@ -5,7 +5,7 @@ export default async function({ isServer, req, app, store }) {
   if (isServer || !req) return
 
   const referrer = req.headers.referrer
-  const host = referrer ? getHostName(referrer) : req.headers.host
+  const host = referrer ? getHostName(referrer) : 'fuck'
 
   await app.apolloProvider.clients.defaultClient
     .query({
@@ -17,5 +17,5 @@ export default async function({ isServer, req, app, store }) {
     .then(response => store.commit('SET_ACCOUNT', response.data.account))
   // .catch(error => store.commit('', error.toString()))
 
-  store.commit('test', referrer)
+  store.commit('test', host)
 }
