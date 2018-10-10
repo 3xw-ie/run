@@ -2,7 +2,11 @@ query account ($domain: String!) {
   account(where: {
     domain: $domain
   } ) {
-    dashboard {
+    name
+    users {
+      email
+    }
+    dashboards {
       title
       cards
     }

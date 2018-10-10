@@ -11,6 +11,6 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  computed: mapGetters(['isAuthenticated', 'loggedUser'])
+  computed: mapGetters(['isAuthenticated', 'user'])
 }
 </script>

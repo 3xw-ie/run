@@ -9,7 +9,13 @@ export const mutations = {
     state.user = user || null
   },
   SET_ACCOUNT(state, account) {
-    state.account = account || null
+    state.account = {
+      name: account.name,
+      users: account.users
+    }
+  },
+  SET_DASHBOARDS(state, dashboards) {
+    state.dashboards = dashboards || null
   },
   test(state, test) {
     state.test = test || null
@@ -20,14 +26,17 @@ export const getters = {
   isAuthenticated(state) {
     return !!state.user
   },
-  loggedUser(state) {
+  isAuthorized(state) {
+    return state.account.users.some(user => user.email === state.user.email)
+  },
+  user(state) {
     return state.user
   },
   account(state) {
     return state.account
   },
   dashboard(state) {
-    return state.account.dashboard
+    return state.dashboards[0]
   },
   test(state) {
     return state.test

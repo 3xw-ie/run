@@ -15,7 +15,7 @@ import navbar from '~/components/navbar'
 import { mapGetters } from 'vuex'
 
 export default {
-  middleware: ['authenticated', 'account'],
+  middleware: ['authenticated', 'account', 'authorized'],
   components: {
     navbar
   },
@@ -24,3 +24,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.__nuxt-error-page {
+  @apply w-full;
+}
+</style>
