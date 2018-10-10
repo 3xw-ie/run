@@ -38,7 +38,7 @@ export const unsetToken = () => {
 }
 
 export const getUserFromCookie = req => {
-  if (!req.headers.cookie) return
+  if (!req.headers.cookie) return console.error('maybe this')
   const jwtCookie = req.headers.cookie
     .split(';')
     .find(c => c.trim().startsWith('jwt='))

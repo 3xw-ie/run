@@ -12,7 +12,7 @@ export default {
       console.error('Something happened with the Sign In request')
     }
     setToken(token)
-    this.$router.replace('/')
+    window.location = '/'
   }
 }
 </script>

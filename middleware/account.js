@@ -1,8 +1,7 @@
 import account from '~/apollo/queries/account'
 
 export default async function({ isServer, req, app, store }) {
-  // If nuxt generate, pass this middleware
-  if (isServer && !req) return
+  if (isServer || !req) return
 
   const host = req.headers.host
 
