@@ -17,5 +17,5 @@ export default async function({ isServer, req, app, store }) {
     .then(response => store.commit('SET_ACCOUNT', response.data.account))
   // .catch(error => store.commit('', error.toString()))
 
-  store.commit('test', host)
+  store.commit('test', referrer)
 }
