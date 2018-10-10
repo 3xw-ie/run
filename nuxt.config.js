@@ -28,6 +28,8 @@ module.exports = {
     middleware: 'check-auth'
   },
 
+  serverMiddleware: ['~/server-middleware/logger'],
+
   /*
   ** Global CSS
   */
