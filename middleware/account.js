@@ -4,8 +4,8 @@ import { getHostName } from '~/utils/hostname'
 export default async function({ isServer, req, app, store }) {
   if (isServer || !req) return
 
-  const referer = req.headers.referer
-  const host = referer ? getHostName(referer) : req.headers.host
+  const forwarded = req.headers['x-forwarded-host']
+  const host = forwarded ? forwarded : req.headers.host
 
   await app.apolloProvider.clients.defaultClient
     .query({
