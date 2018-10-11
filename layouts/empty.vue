@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  middleware: ['authenticated', 'account']
+  middleware: ['account']
 }
 </script>

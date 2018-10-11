@@ -14,13 +14,10 @@ const getLock = options => {
 
 const getBaseUrl = () => `${window.location.protocol}//${window.location.host}`
 
-const getOptions = container => {
+const getOptions = options => {
   const secret = uuid.v4()
   setSecret(secret)
   return {
-    container,
-    closable: false,
-    allowSignUp: false,
     auth: {
       responseType: 'token id_token',
       redirectUrl: `${getBaseUrl()}/auth`,
@@ -28,9 +25,11 @@ const getOptions = container => {
         scope: 'openid profile email',
         state: secret
       }
-    }
+    },
+    closable: false,
+    ...options
   }
 }
 
-export const showLogin = container => getLock(getOptions(container)).show()
+export const showLogin = options => getLock(getOptions(options)).show()
 export const logout = () => getLock().logout({ returnTo: getBaseUrl() })

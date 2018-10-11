@@ -3,6 +3,9 @@ query account ($domain: String!) {
     domain: $domain
   } ) {
     name
+    logo {
+      url
+    }
     users {
       email
     }
