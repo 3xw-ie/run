@@ -1,5 +1,4 @@
 import account from '~/apollo/queries/account'
-import { getHostName } from '~/utils/hostname'
 
 export default async function({ isServer, req, app, store }) {
   if (isServer || !req) return

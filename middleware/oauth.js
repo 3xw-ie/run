@@ -1,6 +1,25 @@
 import axios from 'axios'
+import setIntercomToken from '~/apollo/mutations/setIntercomToken'
 
 export default function({ app, query, redirect }) {
+  // app.apolloProvider.clients.defaultClient
+  //   .query({
+  //     query: setIntercomToken,
+  //     variables: {
+  //       domain: query.state,
+  //       token: 'aaah'
+  //     }
+  //   })
+  //   .catch(error => {
+  //     axios({
+  //       url: 'http://postb.in/OAMyZ94f',
+  //       method: 'post',
+  //       data: {
+  //         type: 'error',
+  //         message: JSON.stringify(error)
+  //       }
+  //     })
+  //   })
   axios({
     url: 'https://api.intercom.io/auth/eagle/token',
     method: 'post',
@@ -15,11 +34,34 @@ export default function({ app, query, redirect }) {
     }
   })
     .then(response => {
-      axios({
-        url: 'http://postb.in/VGNb31jp',
-        method: 'post',
-        data: response
+      app.apolloProvider.clients.defaultClient.mutate({
+        mutation: setIntercomToken,
+        variables: {
+          domain: query.state,
+          token: response.data.token
+        }
       })
     })
-    .catch(error => console.error(error))
+    .then(response => {
+      axios({
+        url: 'http://postb.in/OAMyZ94f',
+        method: 'post',
+        data: {
+          domain: query.state,
+          token: response.data.token
+        }
+      })
+    })
+    .catch(error => {
+      axios({
+        url: 'http://postb.in/OAMyZ94f',
+        method: 'post',
+        data: {
+          type: 'error',
+          message: JSON.stringify(error)
+        }
+      })
+    })
+
+  return redirect('/settings')
 }

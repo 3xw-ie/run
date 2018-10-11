@@ -16,7 +16,8 @@ export const mutations = {
       name: account.name,
       domain: account.domain,
       logo: account.logo ? account.logo.url : null,
-      users: account.users
+      users: account.users,
+      intercomToken: account.intercomToken
     }
   },
   SET_DASHBOARDS(state, dashboards) {

@@ -1,0 +1,14 @@
+mutation setIntercomToken ($domain: String! $token: String!) {
+  updateAccount(
+    data: {
+      intercomToken: $token
+    }
+    where:{
+     domain: $domain 
+    }
+  ) {
+    name
+    domain
+    intercomToken
+  }
+}
