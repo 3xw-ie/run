@@ -25,6 +25,12 @@ export const mutations = {
   },
   setPageTitle(state, title) {
     state.page.title = title
+  },
+  setIntercomToken(state, token) {
+    state.account ? (state.account.intercomToken = token) : null
+  },
+  unsetIntercomToken(state) {
+    state.account ? (state.account.intercomToken = null) : null
   }
 }
 

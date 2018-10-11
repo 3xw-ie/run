@@ -1,26 +1,8 @@
 import axios from 'axios'
 import setIntercomToken from '~/apollo/mutations/setIntercomToken'
 
-export default function({ app, query, redirect }) {
-  // app.apolloProvider.clients.defaultClient
-  //   .query({
-  //     query: setIntercomToken,
-  //     variables: {
-  //       domain: query.state,
-  //       token: 'aaah'
-  //     }
-  //   })
-  //   .catch(error => {
-  //     axios({
-  //       url: 'http://postb.in/OAMyZ94f',
-  //       method: 'post',
-  //       data: {
-  //         type: 'error',
-  //         message: JSON.stringify(error)
-  //       }
-  //     })
-  //   })
-  axios({
+export default async function({ query, app, store, redirect }) {
+  await axios({
     url: 'https://api.intercom.io/auth/eagle/token',
     method: 'post',
     headers: {
@@ -41,27 +23,9 @@ export default function({ app, query, redirect }) {
           token: response.data.token
         }
       })
+      store.commit('setIntercomToken', token)
     })
-    .then(response => {
-      axios({
-        url: 'http://postb.in/OAMyZ94f',
-        method: 'post',
-        data: {
-          domain: query.state,
-          token: response.data.token
-        }
-      })
-    })
-    .catch(error => {
-      axios({
-        url: 'http://postb.in/OAMyZ94f',
-        method: 'post',
-        data: {
-          type: 'error',
-          message: JSON.stringify(error)
-        }
-      })
-    })
+    .catch(error => console.error(error))
 
   return redirect('/settings')
 }
