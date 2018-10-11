@@ -11,7 +11,7 @@ export const mutations = {
   SET_ACCOUNT(state, account) {
     state.account = {
       name: account.name,
-      logo: account.logo.url,
+      logo: account.logo ? account.logo.url : null,
       users: account.users
     }
   },
