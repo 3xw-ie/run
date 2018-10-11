@@ -17,7 +17,10 @@ export default {
     card
   },
   computed: {
-    ...mapGetters(['dashboard', 'test'])
+    ...mapGetters(['account', 'dashboard'])
+  },
+  created() {
+    this.$store.commit('setPageTitle', this.dashboard.title)
   }
 }
 </script>

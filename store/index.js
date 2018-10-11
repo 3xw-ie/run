@@ -1,6 +1,9 @@
 export const state = () => {
   return {
-    user: null
+    account: {},
+    dashboards: [],
+    page: {},
+    user: {}
   }
 }
 
@@ -11,12 +14,16 @@ export const mutations = {
   SET_ACCOUNT(state, account) {
     state.account = {
       name: account.name,
+      domain: account.domain,
       logo: account.logo ? account.logo.url : null,
       users: account.users
     }
   },
   SET_DASHBOARDS(state, dashboards) {
     state.dashboards = dashboards || null
+  },
+  setPageTitle(state, title) {
+    state.page.title = title
   }
 }
 
@@ -36,7 +43,10 @@ export const getters = {
   dashboard(state) {
     return state.dashboards ? state.dashboards[0] : null
   },
-  pageTitle(state) {
-    return state.account ? 'Run | ' + state.account.name : 'Run | by 3xW'
+  metaTitle(state) {
+    return state.account.name ? 'Run | ' + state.account.name : 'Run | by 3xW'
+  },
+  page(state) {
+    return state.page
   }
 }

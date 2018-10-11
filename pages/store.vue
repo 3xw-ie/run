@@ -4,6 +4,9 @@
 
 <script>
 export default {
-  layout: 'empty'
+  layout: 'empty',
+  mounted() {
+    console.log(this)
+  }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <nav class="">
-    <nuxt-link v-if="!isAuthenticated" to="/login" class="text-inherit no-underline">Login</nuxt-link>
-    <nuxt-link v-else to="/logout" class="text-inherit no-underline">Logout</nuxt-link>
+  <nav class="mr-2">
+    <nuxt-link to="/settings" class="text-inherit no-underline mr-4">Settings</nuxt-link>
+    <nuxt-link to="/logout" class="text-inherit no-underline">Logout</nuxt-link>
   </nav>
 </template>
 

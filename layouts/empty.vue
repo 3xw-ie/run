@@ -8,10 +8,10 @@ import { mapGetters } from 'vuex'
 export default {
   head: function() {
     return {
-      title: this.pageTitle
+      title: this.metaTitle
     }
   },
   middleware: ['account'],
-  computed: mapGetters(['pageTitle', 'dashboard'])
+  computed: mapGetters(['metaTitle', 'dashboard'])
 }
 </script>
