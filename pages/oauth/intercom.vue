@@ -8,7 +8,7 @@
 import { getQueryParams } from '~/utils/auth'
 
 export default {
-  middleware: 'oauth',
+  middleware: 'oauth-intercom',
   layout: 'empty'
 }
 </script>
