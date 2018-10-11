@@ -6,7 +6,12 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  head: function() {
+    return {
+      title: this.pageTitle
+    }
+  },
   middleware: ['account'],
-  computed: mapGetters(['dashboard'])
+  computed: mapGetters(['pageTitle', 'dashboard'])
 }
 </script>

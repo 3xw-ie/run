@@ -1,10 +1,11 @@
 <template>
-  <p>Signing off...</p>
+  <p>Logging you out.</p>
 </template>
 
 <script>
 export default {
-  mounted() {
+  layout: 'empty',
+  beforeCreate() {
     const unsetToken = require('~/utils/auth').unsetToken
     const logout = require('~/utils/lock').logout
 

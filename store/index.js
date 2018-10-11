@@ -17,9 +17,6 @@ export const mutations = {
   },
   SET_DASHBOARDS(state, dashboards) {
     state.dashboards = dashboards || null
-  },
-  test(state, test) {
-    state.test = test || null
   }
 }
 
@@ -37,9 +34,9 @@ export const getters = {
     return state.account
   },
   dashboard(state) {
-    return state.dashboards[0]
+    return state.dashboards ? state.dashboards[0] : null
   },
-  test(state) {
-    return state.test
+  pageTitle(state) {
+    return state.account ? 'Run | ' + state.account.name : 'Run | by 3xW'
   }
 }

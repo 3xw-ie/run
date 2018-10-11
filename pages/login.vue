@@ -8,14 +8,13 @@ import { mapGetters } from 'vuex'
 export default {
   middleware: ['anonymous'],
   layout: 'empty',
-  computed: mapGetters(['account', 'dashboard']),
-  mounted() {
-    console.log(this.account)
+  computed: mapGetters(['account', 'pageTitle', 'dashboard']),
+  beforeMount() {
     const showLogin = require('~/utils/lock').showLogin
     showLogin({
       container: 'auth0-lock',
       languageDictionary: {
-        title: this.account.name ? 'Run | ' + this.account.name : 'Run | by 3xW'
+        title: this.pageTitle
       },
       theme: {
         logo: this.account.logo,
