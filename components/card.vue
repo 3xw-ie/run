@@ -47,7 +47,7 @@ export default {
     async handleButtonClick() {
       const button = this.card.button
       await this.$axios({
-        url: 'http://mockbin.org/bin/8bbbd27b-0396-4063-b4e3-8777a8dee54e/view',
+        url: button.url,
         method: button.action,
         data: button.payload
       })
