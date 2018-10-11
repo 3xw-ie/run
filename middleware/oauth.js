@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default function({ app, query, redirect }) {
   axios({
-    url: 'http://postb.in/VGNb31jp',
+    url: 'https://api.intercom.io/auth/eagle/token',
     method: 'post',
     headers: {
       Accept: 'application/json',
