@@ -1,5 +1,5 @@
 <template>
-  <nuxt/>
+  <nuxt class="min-h-screen w-full flex justify-center items-center"/>
 </template>
 
 <script>

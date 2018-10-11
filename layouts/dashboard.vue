@@ -1,10 +1,10 @@
 <template>
-  <main class="min-h-screen w-full flex">
-    <navbar class="min-h-screen w-1/5 bg-white flex flex-col p-4 pt-20 items-center"/>
-    <section class="w-4/5 flex flex-col">
-      <header class="bg-blue text-white p-4 border-b-2">
-        <h1>{{ dashboard.title ? dashboard.title : 'Dashboard' }}</h1>
-      </header>
+  <main class="min-h-screen w-full flex flex-col">
+    <header :style="'background-color:' + dashboard.color" class="flex justify-between bg-blue text-white p-4 border-b-2">
+      <h1>{{ dashboard.title ? dashboard.title : 'Dashboard' }}</h1>
+      <navbar class="flex items-center text-white"/>
+    </header>
+    <section class="flex-1 flex flex-col">
       <nuxt class="flex-1 p-4 border-l-2 bg-grey-lightest"/>
     </section>
   </main>

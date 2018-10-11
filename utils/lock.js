@@ -20,6 +20,7 @@ const getOptions = container => {
   return {
     container,
     closable: false,
+    allowSignUp: false,
     auth: {
       responseType: 'token id_token',
       redirectUrl: `${getBaseUrl()}/auth`,

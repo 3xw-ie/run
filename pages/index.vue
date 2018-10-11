@@ -3,9 +3,6 @@
     <section class="grid">
       <card v-for="card in dashboard.cards" :key="card.title" :card="card"/>
     </section>
-    <card class="mt-4">
-      <pre>{{ test }}</pre>
-    </card>
   </main>
 </template>
 
