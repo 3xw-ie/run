@@ -12,7 +12,8 @@ query account ($domain: String!) {
     dashboards {
       title
       cards
-      color
+      primaryColor
+      backgroundColor
     }
   }
 }

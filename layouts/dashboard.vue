@@ -5,7 +5,7 @@
       <navbar class="flex items-center text-white"/>
     </header>
     <section class="flex-1 flex flex-col">
-      <nuxt class="flex-1 p-4 border-l-2 bg-grey-lightest"/>
+      <nuxt :style="'background-color: ' + dashboard.backgroundColor" class="flex-1 p-4 border-l-2 bg-grey-lightest"/>
     </section>
   </main>
 </template>

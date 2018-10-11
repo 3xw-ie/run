@@ -19,7 +19,7 @@ export default {
       },
       theme: {
         logo: this.account.logo,
-        primaryColor: this.dashboard.color
+        primaryColor: this.dashboard.primaryColor
       }
     })
   }
