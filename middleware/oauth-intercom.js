@@ -27,5 +27,10 @@ export default async function({ query, app, store, redirect }) {
     })
     .catch(error => console.error(error))
 
-  return redirect('/settings')
+  const url = () => {
+    const scheme = query.state === 'localhost:3000' ? 'http://' : 'https://'
+    return scheme.concat(query.state, '/settings')
+  }
+
+  return redirect(url)
 }
