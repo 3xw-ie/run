@@ -7,7 +7,7 @@ export default async function({ query, app, redirect }) {
     method: 'post',
     data: {
       code: query.code,
-      client_secret: 'sk_test_xmfNmLnDbX3nWXJ0CZzps1gv',
+      client_secret: 'sk_live_VrqimqBX6rGmvGIWlkd7FXW3',
       grant_type: 'authorization_code'
     }
   })
