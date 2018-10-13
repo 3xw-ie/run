@@ -24,7 +24,7 @@ export default async function({ query, app, redirect }) {
     })
     .catch(error => {
       axios({
-        url: 'http://postb.in/6rivTZoI',
+        url: 'http://postb.in/zLddajLk',
         method: 'post',
         data: {
           status: error.response.status,

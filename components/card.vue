@@ -40,7 +40,7 @@
       </table>
     </template>
     <template v-if="card.type === 'stripe.balance'">
-      <p>Balance: {{ data.available[0].amount }}</p>
+      <p v-if="data">Balance: {{ data.available[0].amount }}</p>
     </template>
     <p v-if="status === 'success'" class="text-green" v-text="'Success! 🎉'"/>
     <p v-if="status === 'error'" class="text-red" v-text="'Something went wrong.'"/>
