@@ -47,13 +47,13 @@
         <thead>
           <tr>
             <td>Amount</td>
-            <td>Customer</td>
+            <td>Created</td>
           </tr>
         </thead>
         <tbody>
           <tr v-for="data in data.data" :key="data.id">
             <td class="pr-4 capitalize">€{{ data.amount / 100 }}</td>
-            <td>{{ data.customer }}</td>
+            <td>{{ data.created | moment('Do MMM YYYY') }}</td>
           </tr>
         </tbody>
       </table>
@@ -220,7 +220,7 @@ export default {
       this.loading = true
       this.$axios.setToken('Bearer ' + this.stripeToken)
       await this.$axios({
-        url: 'https://api.stripe.com/v1/charges?limit=100'
+        url: 'https://api.stripe.com/v1/charges?limit=10'
       })
         .then(response => {
           this.loading = false
