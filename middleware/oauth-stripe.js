@@ -22,17 +22,6 @@ export default async function({ query, app, redirect }) {
         }
       })
     })
-    .catch(error => {
-      axios({
-        url: 'http://postb.in/zLddajLk',
-        method: 'post',
-        data: {
-          status: error.response.status,
-          statusText: error.response.statusText,
-          data: JSON.stringify(error.response.data)
-        }
-      })
-    })
     .catch(error => console.error(error))
 
   const scheme = query.state === 'localhost:3000' ? 'http://' : 'https://'
