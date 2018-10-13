@@ -42,6 +42,22 @@
     <template v-if="card.type === 'stripe.balance'">
       <p v-if="data">Balance: {{ data.available[0].amount }}</p>
     </template>
+    <template v-if="card.type === 'stripe.charges'">
+      <table v-if="!loading && data">
+        <thead>
+          <tr>
+            <td>Amount</td>
+            <td>Customer</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="data in data.data" :key="data.id">
+            <td class="pr-4 capitalize">€{{ data.amount / 100 }}</td>
+            <td>{{ data.customer }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
     <p v-if="status === 'success'" class="text-green" v-text="'Success! 🎉'"/>
     <p v-if="status === 'error'" class="text-red" v-text="'Something went wrong.'"/>
     <p v-if="loading">Loading...</p>
@@ -78,6 +94,9 @@ export default {
     }
     if (this.card.type === 'stripe.balance') {
       this.getStripeBalance()
+    }
+    if (this.card.type === 'stripe.charges') {
+      this.getStripeCharges()
     }
   },
   methods: {
@@ -189,7 +208,22 @@ export default {
       })
         .then(response => {
           this.loading = false
-          console.log(response)
+          this.data = response.data
+        })
+        .catch(error => {
+          this.loading = false
+          console.error(error)
+          this.updateStatus('error')
+        })
+    },
+    async getStripeCharges() {
+      this.loading = true
+      this.$axios.setToken('Bearer ' + this.stripeToken)
+      await this.$axios({
+        url: 'https://api.stripe.com/v1/charges?limit=100'
+      })
+        .then(response => {
+          this.loading = false
           this.data = response.data
         })
         .catch(error => {
