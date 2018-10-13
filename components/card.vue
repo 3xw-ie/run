@@ -116,13 +116,11 @@ export default {
         })
     },
     prepareCounts(counts) {
-      console.log(counts)
       let output = []
 
       if (this.card.counts) {
         this.card.counts.forEach(wanted => {
           const match = Object.keys(counts).find(count => count === wanted)
-          console.log(match)
           output.push({
             name: match + 's',
             count: counts[match].count
