@@ -101,9 +101,8 @@ export default {
     },
     async getIntercomAppCounts(counts) {
       this.loading = true
-      const url = `http://localhost:3001/intercom/${this.intercomToken}/counts`
       await this.$axios({
-        url,
+        url: `https://api.3xw.app/intercom/${this.intercomToken}/counts`,
         method: 'get'
       })
         .then(response => {
@@ -141,9 +140,8 @@ export default {
     },
     async getIntercomUserSegmentCount(segments) {
       this.loading = true
-      const url = `http://localhost:3001/intercom/${this.intercomToken}/counts?type=user&count=segment` // eslint-disable-line
       await this.$axios({
-        url,
+        url: `https://api.3xw.app/intercom/${this.intercomToken}/counts?type=user&count=segment`, // eslint-disable-line
         method: 'get'
       })
         .then(response => {
