@@ -5,6 +5,7 @@ query account ($domain: String!) {
     name
     domain
     intercomToken
+    stripeToken
     logo {
       url
     }

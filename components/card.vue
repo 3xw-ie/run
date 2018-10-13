@@ -39,6 +39,9 @@
         </tbody>
       </table>
     </template>
+    <template v-if="card.type === 'stripe.balance'">
+      <p>Balance: {{ data.available[0].amount }}</p>
+    </template>
     <p v-if="status === 'success'" class="text-green" v-text="'Success! 🎉'"/>
     <p v-if="status === 'error'" class="text-red" v-text="'Something went wrong.'"/>
     <p v-if="loading">Loading...</p>
@@ -64,7 +67,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['dashboard', 'intercomToken'])
+    ...mapGetters(['dashboard', 'intercomToken', 'stripeToken'])
   },
   mounted() {
     if (this.card.type === 'intercom.counts.user.segment') {
@@ -72,6 +75,9 @@ export default {
     }
     if (this.card.type === 'intercom.counts') {
       this.getIntercomAppCounts(this.card.counts)
+    }
+    if (this.card.type === 'stripe.balance') {
+      this.getStripeBalance()
     }
   },
   methods: {
@@ -174,6 +180,23 @@ export default {
         })
       }
       return output
+    },
+    async getStripeBalance() {
+      this.loading = true
+      this.$axios.setToken('Bearer ' + this.stripeToken)
+      await this.$axios({
+        url: 'https://api.stripe.com/v1/balance'
+      })
+        .then(response => {
+          this.loading = false
+          console.log(response)
+          this.data = response.data
+        })
+        .catch(error => {
+          this.loading = false
+          console.error(error)
+          this.updateStatus('error')
+        })
     }
   }
 }

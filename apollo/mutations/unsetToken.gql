@@ -1,8 +1,6 @@
-mutation unsetIntercomToken ($domain: String!) {
+mutation unsetToken ($domain: String!, $data: AccountUpdateInput!) {
   updateAccount(
-    data: {
-      intercomToken: null
-    }
+    data: $data
     where:{
      domain: $domain 
     }
@@ -10,5 +8,6 @@ mutation unsetIntercomToken ($domain: String!) {
     name
     domain
     intercomToken
+    stripeToken
   }
 }

@@ -1,0 +1,13 @@
+mutation setToken ($domain: String! $data: AccountUpdateInput!) {
+  updateAccount(
+    data: $data
+    where:{
+     domain: $domain 
+    }
+  ) {
+    name
+    domain
+    intercomToken
+    stripeToken
+  }
+}

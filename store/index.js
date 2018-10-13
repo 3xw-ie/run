@@ -17,7 +17,8 @@ export const mutations = {
       domain: account.domain,
       logo: account.logo ? account.logo.url : null,
       users: account.users,
-      intercomToken: account.intercomToken
+      intercomToken: account.intercomToken,
+      stripeToken: account.stripeToken
     }
   },
   SET_DASHBOARDS(state, dashboards) {
@@ -26,11 +27,11 @@ export const mutations = {
   setPageTitle(state, title) {
     state.page.title = title
   },
-  setIntercomToken(state, token) {
-    state.account ? (state.account.intercomToken = token) : null
+  setToken(state, provider, token) {
+    state.account ? (state.account[`${provider}Token`] = token) : null
   },
-  unsetIntercomToken(state) {
-    state.account ? (state.account.intercomToken = null) : null
+  unsetToken(state, provider) {
+    state.account ? (state.account[`${provider}Token`] = null) : null
   }
 }
 
@@ -58,5 +59,8 @@ export const getters = {
   },
   intercomToken(state) {
     return state.account.intercomToken
+  },
+  stripeToken(state) {
+    return state.account.stripeToken
   }
 }

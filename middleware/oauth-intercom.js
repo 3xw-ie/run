@@ -1,5 +1,5 @@
 import axios from 'axios'
-import setIntercomToken from '~/apollo/mutations/setIntercomToken'
+import setToken from '~/apollo/mutations/setToken'
 
 export default async function({ query, app, store, redirect }) {
   await axios({
@@ -17,10 +17,12 @@ export default async function({ query, app, store, redirect }) {
   })
     .then(response => {
       app.apolloProvider.clients.defaultClient.mutate({
-        mutation: setIntercomToken,
+        mutation: setToken,
         variables: {
           domain: query.state,
-          token: response.data.token
+          data: {
+            intercomToken: response.data.token
+          }
         }
       })
     })
