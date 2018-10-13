@@ -55,5 +55,8 @@ export const getters = {
   },
   page(state) {
     return state.page
+  },
+  intercomToken(state) {
+    return state.account.intercomToken
   }
 }

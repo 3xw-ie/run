@@ -23,14 +23,11 @@ export default async function({ query, app, store, redirect }) {
           token: response.data.token
         }
       })
-      store.commit('setIntercomToken', token)
     })
     .catch(error => console.error(error))
 
-  const url = () => {
-    const scheme = query.state === 'localhost:3000' ? 'http://' : 'https://'
-    return scheme.concat(query.state, '/settings')
-  }
+  const scheme = query.state === 'localhost:3000' ? 'http://' : 'https://'
+  const url = scheme.concat(query.state, '/settings')
 
   return redirect(url)
 }

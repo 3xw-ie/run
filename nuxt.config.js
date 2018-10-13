@@ -43,18 +43,22 @@ module.exports = {
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/axios', '@nuxtjs/apollo'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/apollo', '@nuxtjs/proxy'],
 
-  /*
-  ** Axios module configuration
-  */
+  apollo: {
+    clientConfigs: {
+      default: '~/apollo/client-configs/default'
+    }
+  },
+
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
   },
 
-  apollo: {
-    clientConfigs: {
-      default: '~/apollo/client-configs/default.js'
+  proxy: {
+    '/api/intercom/': {
+      target: 'https://api.intercom.io/',
+      pathRewrite: { '/api/intercom/': '' }
     }
   },
 

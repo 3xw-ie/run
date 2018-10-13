@@ -1,0 +1,11 @@
+query accounts ($email: String!) {
+  person (
+    where: {
+      email: $email
+    }) {
+    accounts {
+      name
+      domain
+    }
+  }
+}
