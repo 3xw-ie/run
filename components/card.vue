@@ -14,7 +14,7 @@
       <button
         :style="'background-color:' + dashboard.primaryColor"
         type="submit"
-        class="px-3 py-2 rounded mt-4 text-white"
+        class="px-3 py-2 rounded my-4 text-white"
         @click.prevent="handleButtonClick()"
         v-text="card.button.text"
       />
@@ -23,14 +23,24 @@
       <table v-if="!loading">
         <tbody>
           <tr v-for="segment in data" :key="segment.name">
-            <td class="pr-4">{{ segment.name }}</td>
+            <td class="pr-4 capitalize">{{ segment.name }}</td>
             <td>{{ segment.count }}</td>
           </tr>
         </tbody>
       </table>
     </template>
-    <p v-if="status === 'success'" class="mt-4 text-green" v-text="'Success! 🎉'"/>
-    <p v-if="status === 'error'" class="mt-4 text-red" v-text="'Something went wrong.'"/>
+    <template v-if="card.type === 'intercom.counts'">
+      <table v-if="!loading">
+        <tbody>
+          <tr v-for="count in data" :key="count.name">
+            <td class="pr-4 capitalize">{{ count.name }}</td>
+            <td>{{ count.count }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+    <p v-if="status === 'success'" class="text-green" v-text="'Success! 🎉'"/>
+    <p v-if="status === 'error'" class="text-red" v-text="'Something went wrong.'"/>
     <p v-if="loading">Loading...</p>
     <slot/>
   </div>
@@ -60,6 +70,9 @@ export default {
     if (this.card.type === 'intercom.counts.user.segment') {
       this.getIntercomUserSegmentCount(this.card.segments)
     }
+    if (this.card.type === 'intercom.counts') {
+      this.getIntercomAppCounts(this.card.counts)
+    }
   },
   methods: {
     async handleButtonClick() {
@@ -86,21 +99,62 @@ export default {
     updateStatus(status) {
       this.status = status
     },
+    async getIntercomAppCounts(counts) {
+      this.loading = true
+      const url = `http://localhost:3001/intercom/${this.intercomToken}/counts`
+      await this.$axios({
+        url,
+        method: 'get'
+      })
+        .then(response => {
+          this.data = this.prepareCounts(response.data)
+          this.loading = false
+        })
+        .catch(error => {
+          this.loading = false
+          console.error(error)
+          this.updateStatus('error')
+        })
+    },
+    prepareCounts(counts) {
+      console.log(counts)
+      let output = []
+
+      if (this.card.counts) {
+        this.card.counts.forEach(wanted => {
+          const match = Object.keys(counts).find(count => count === wanted)
+          console.log(match)
+          output.push({
+            name: match + 's',
+            count: counts[match].count
+          })
+        })
+      } else {
+        counts.forEach(count => {
+          output.push({
+            name: Object.keys(count)[0] + 's',
+            count: count[Object.keys(count)]
+          })
+        })
+      }
+      return output
+    },
     async getIntercomUserSegmentCount(segments) {
       this.loading = true
+      const url = `http://localhost:3001/intercom/${this.intercomToken}/counts?type=user&count=segment` // eslint-disable-line
       await this.$axios({
-        url: '/api/intercom/counts?type=user&count=segment',
-        method: 'get',
-        headers: {
-          Accept: 'application/json',
-          Authorization: `Bearer ${this.intercomToken}`
-        }
+        url,
+        method: 'get'
       })
         .then(response => {
           this.data = this.prepareSegments(response.data.user.segment)
           this.loading = false
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+          this.loading = false
+          console.error(error)
+          this.updateStatus('error')
+        })
     },
     prepareSegments(segments) {
       let output = []
