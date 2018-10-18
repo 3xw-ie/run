@@ -43,7 +43,7 @@
             <button v-if="account.googleToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
               Remove
             </button>
-            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?client_id=443756474293-52neei2difkt7lc3r703g2u20uhjevoi.apps.googleusercontent.com&redirect_uri=http://localhost:3000/oauth/google&response_type=token&scope=https://www.googleapis.com/auth/analytics&state=${account.domain}`">
+            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?client_id=443756474293-52neei2difkt7lc3r703g2u20uhjevoi.apps.googleusercontent.com&redirect_uri=https://run.3xw.app/oauth/google&response_type=token&scope=https://www.googleapis.com/auth/analytics&state=${account.domain}`">
               <img src="/img/google-sign-in-button.png" srcset="/img/google-sign-in-button.png 1x, /img/google-sign-in-button@2x.png 2x" alt="Sign in with Google" class="h-full w-full">
             </a>
           </div>

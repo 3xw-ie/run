@@ -28,7 +28,9 @@ export default {
       })
       .then(response => {
         this.$store.commit('setToken', 'google', this.hash.access_token)
-        window.location = '/integrations'
+        const scheme = query.state === 'localhost:3000' ? 'http://' : 'https://'
+        const url = scheme.concat(query.state, '/integrations')
+        window.location = url
       })
       .catch(error => console.error(error))
   }
