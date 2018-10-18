@@ -1,7 +1,7 @@
 <template>
   <main v-if="account.intercomToken">
     <section class="container mx-auto">
-      <nuxt-link to="/integrations" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Integrations</nuxt-link>
+      <nuxt-link to="/" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Dashboard</nuxt-link>
       <Card>
         <h2 class="mb-4">Intercom</h2>
         <p>More actions here coming soon!</p>

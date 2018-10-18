@@ -3,13 +3,15 @@
     <h3 v-if="card.title" class="mb-4">{{ card.title }}</h3>
     <p v-if="loading">Loading...</p>
     <template v-if="card.type === 'links'">
-      <a
-        v-for="link in card.links"
-        :key="link.url"
-        :href="link.url"
-        class="block leading-normal"
-        v-text="link.text"
-      />
+      <div class="flex flex-wrap">
+        <a
+          v-for="link in card.links"
+          :key="link.url"
+          :href="link.url"
+          class="w-1/2 block leading-normal"
+          v-text="link.text"
+        />
+      </div>
     </template>
     <template v-if="card.type === 'button'">
       <button
