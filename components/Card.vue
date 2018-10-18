@@ -1,12 +1,13 @@
 <template>
-  <div class="rounded bg-white shadow-md p-4">
-    <h3 v-if="card.title">{{ card.title }}</h3>
+  <div :style="card.width ? `grid-column-start: span ${card.width}` : '' + card.height ? `grid-row-start: span ${card.height}` : ''" class="rounded bg-white shadow-md p-4">
+    <h3 v-if="card.title" class="mb-4">{{ card.title }}</h3>
+    <p v-if="loading">Loading...</p>
     <template v-if="card.type === 'links'">
       <a
         v-for="link in card.links"
         :key="link.url"
         :href="link.url"
-        class="block my-2"
+        class="block leading-normal"
         v-text="link.text"
       />
     </template>
@@ -20,7 +21,13 @@
       />
     </template>
     <template v-if="card.type === 'intercom.counts.user.segment'">
-      <table v-if="!loading">
+      <div v-if="!loading && true" class="flex">
+        <div v-for="(count, index) in data" :key="count.name" :class="[`w-1/${data.length}`, + index !== data.length - 1 ? 'border-r-2' : '']" class="flex flex-col p-4 text-center">
+          <h1>{{ count.count }}</h1>
+          <p class="flex-1 flex justify-center items-center">{{ count.name }}</p>
+        </div>
+      </div>
+      <table v-else>
         <tbody>
           <tr v-for="segment in data" :key="segment.name">
             <td class="pr-4 capitalize">{{ segment.name }}</td>
@@ -43,24 +50,23 @@
       <p v-if="data">Balance: {{ data.available[0].amount }}</p>
     </template>
     <template v-if="card.type === 'stripe.charges'">
-      <table v-if="!loading && data">
-        <thead>
-          <tr>
-            <td>Amount</td>
-            <td>Created</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="data in data.data" :key="data.id">
-            <td class="pr-4">€{{ data.amount / 100 }}</td>
-            <td>{{ data.created | moment('Do MMM YYYY') }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <ul v-if="!loading && data" class="list-reset mb-2">
+        <li v-for="charge in data.data" :key="charge.id">
+          <span class="font-semibold text-grey-darkest leading-tight">€{{ charge.amount / 100 }}</span> charged <span class="italic"> {{ charge.created | moment('from', 'now') }}</span>.
+        </li>
+      </ul>
+      <nuxt-link to="/stripe/charges" class="text-blue no-underline">See all &rarr;</nuxt-link>
+    </template>
+    <template v-if="card.type === 'stripe.customers'">
+      <ul v-if="!loading && data" class="list-reset mb-2">
+        <li v-for="customer in data.data" :key="customer.id">
+          <span class="leading-tight">{{ customer.email }}</span>
+        </li>
+      </ul>
+      <nuxt-link to="/stripe/customers" class="text-blue no-underline">See all &rarr;</nuxt-link>
     </template>
     <p v-if="status === 'success'" class="text-green" v-text="'Success! 🎉'"/>
     <p v-if="status === 'error'" class="text-red" v-text="'Something went wrong.'"/>
-    <p v-if="loading">Loading...</p>
     <slot/>
   </div>
 </template>
@@ -83,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['dashboard', 'intercomToken', 'stripeToken'])
+    ...mapGetters(['account', 'dashboard'])
   },
   mounted() {
     if (this.card.type === 'intercom.counts.user.segment') {
@@ -97,6 +103,9 @@ export default {
     }
     if (this.card.type === 'stripe.charges') {
       this.getStripeCharges()
+    }
+    if (this.card.type === 'stripe.customers') {
+      this.getStripeCustomers()
     }
   },
   methods: {
@@ -127,7 +136,9 @@ export default {
     async getIntercomAppCounts(counts) {
       this.loading = true
       await this.$axios({
-        url: `https://api.3xw.app/intercom/${this.intercomToken}/counts`,
+        url: `https://api.3xw.app/intercom/${
+          this.account.intercomToken
+        }/counts`,
         method: 'get'
       })
         .then(response => {
@@ -164,7 +175,7 @@ export default {
     async getIntercomUserSegmentCount(segments) {
       this.loading = true
       await this.$axios({
-        url: `https://api.3xw.app/intercom/${this.intercomToken}/counts?type=user&count=segment`, // eslint-disable-line
+        url: `https://api.3xw.app/intercom/${this.account.intercomToken}/counts?type=user&count=segment`, // eslint-disable-line
         method: 'get'
       })
         .then(response => {
@@ -202,7 +213,7 @@ export default {
     },
     async getStripeBalance() {
       this.loading = true
-      this.$axios.setToken('Bearer ' + this.stripeToken)
+      this.$axios.setToken('Bearer ' + this.account.stripeToken)
       await this.$axios({
         url: 'https://api.stripe.com/v1/balance'
       })
@@ -218,9 +229,25 @@ export default {
     },
     async getStripeCharges() {
       this.loading = true
-      this.$axios.setToken('Bearer ' + this.stripeToken)
+      this.$axios.setToken('Bearer ' + this.account.stripeToken)
       await this.$axios({
-        url: 'https://api.stripe.com/v1/charges?limit=10'
+        url: 'https://api.stripe.com/v1/charges?limit=5'
+      })
+        .then(response => {
+          this.loading = false
+          this.data = response.data
+        })
+        .catch(error => {
+          this.loading = false
+          console.error(error)
+          this.updateStatus('error')
+        })
+    },
+    async getStripeCustomers() {
+      this.loading = true
+      this.$axios.setToken('Bearer ' + this.account.stripeToken)
+      await this.$axios({
+        url: 'https://api.stripe.com/v1/customers?limit=5'
       })
         .then(response => {
           this.loading = false

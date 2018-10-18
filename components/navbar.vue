@@ -1,5 +1,6 @@
 <template>
   <nav class="mr-2">
+    <nuxt-link to="/integrations" class="text-inherit no-underline mr-4">Home</nuxt-link>
     <span class="group relative h-full flex items-center">
       <div class="group-hover:block hidden absolute pin-t mt-16 -mx-4 p-4 rounded-b bg-white shadow-md">
         <nuxt-link to="/intercom" class="inline-block text-black no-underline mb-4">Intercom</nuxt-link>

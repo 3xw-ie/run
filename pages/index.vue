@@ -1,6 +1,6 @@
 <template>
   <main>
-    <section class="grid">
+    <section class="container mx-auto grid">
       <Card v-for="card in dashboard.cards" :key="card.title" :card="card"/>
     </section>
   </main>

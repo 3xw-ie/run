@@ -165,7 +165,13 @@ export default {
       this.customer = null
     },
     sendReceipt(charge) {
-      charge.receipt_email = findCustomer(charge.customer).email
+      charge.receipt_email = this.findCustomer(charge.customer).email
+      this.updateStripeCharge(
+        charge,
+        queryString.stringify({
+          receipt_email: charge.receipt_email
+        })
+      )
     }
   }
 }
