@@ -22,14 +22,16 @@ export default {
         variables: {
           domain: this.hash.state,
           data: {
-            googleToken: this.hash.access_token
+            googleToken: this.hash.access_token,
+            googleRefreshToken: this.hash.refresh_token
           }
         }
       })
       .then(response => {
         this.$store.commit('setToken', 'google', this.hash.access_token)
-        const scheme = query.state === 'localhost:3000' ? 'http://' : 'https://'
-        const url = scheme.concat(query.state, '/integrations')
+        const scheme =
+          this.hash.state === 'localhost:3000' ? 'http://' : 'https://'
+        const url = scheme.concat(this.hash.state, '/integrations')
         window.location = url
       })
       .catch(error => console.error(error))
