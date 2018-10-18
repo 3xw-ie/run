@@ -7,6 +7,7 @@
           v-for="link in card.links"
           :key="link.url"
           :href="link.url"
+          target="_blank"
           class="w-1/2 block leading-normal text-blue no-underline"
         >
           {{ link.text }}
