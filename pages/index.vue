@@ -1,20 +1,20 @@
 <template>
   <main>
     <section class="grid">
-      <card v-for="card in dashboard.cards" :key="card.title" :card="card"/>
+      <Card v-for="card in dashboard.cards" :key="card.title" :card="card"/>
     </section>
   </main>
 </template>
 
 <script>
-import card from '~/components/card'
+import Card from '~/components/Card'
 import { mapGetters } from 'vuex'
 import account from '~/apollo/queries/account'
 
 export default {
   layout: 'dashboard',
   components: {
-    card
+    Card
   },
   computed: {
     ...mapGetters(['account', 'dashboard'])
