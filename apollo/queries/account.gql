@@ -4,6 +4,7 @@ query account ($domain: String!) {
   } ) {
     name
     domain
+    googleToken
     intercomToken
     stripeToken
     logo {

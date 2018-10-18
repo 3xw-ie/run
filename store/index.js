@@ -17,6 +17,7 @@ export const mutations = {
       domain: account.domain,
       logo: account.logo ? account.logo.url : null,
       users: account.users,
+      googleToken: account.googleToken,
       intercomToken: account.intercomToken,
       stripeToken: account.stripeToken
     }
@@ -56,11 +57,5 @@ export const getters = {
   },
   page(state) {
     return state.page
-  },
-  intercomToken(state) {
-    return state.account.intercomToken
-  },
-  stripeToken(state) {
-    return state.account.stripeToken
   }
 }

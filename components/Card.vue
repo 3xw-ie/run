@@ -1,16 +1,16 @@
 <template>
   <div :class="[card.width ? `columns-${card.width}` : '', card.height ? `rows-${card.height}` : '']" class="rounded bg-white shadow-md p-4">
-    <h3 v-if="card.title" class="mb-4">{{ card.title }}</h3>
-    <p v-if="loading">Loading...</p>
+    <h3 v-if="card.title" class="mb-2">{{ card.title }}</h3>
     <template v-if="card.type === 'links'">
       <div class="flex flex-wrap">
         <a
           v-for="link in card.links"
           :key="link.url"
           :href="link.url"
-          class="w-1/2 block leading-normal"
-          v-text="link.text"
-        />
+          class="w-1/2 block leading-normal text-blue no-underline"
+        >
+          {{ link.text }}
+        </a>
       </div>
     </template>
     <template v-if="card.type === 'button'">
@@ -23,7 +23,7 @@
       />
     </template>
     <template v-if="card.type === 'intercom.counts.user.segment'">
-      <div v-if="!loading && true" class="flex">
+      <div v-if="!loading && true" class="flex mt-4">
         <div v-for="(count, index) in data" :key="count.name" :class="[`w-1/${data.length}`, + index !== data.length - 1 ? 'border-r-2' : '']" class="flex flex-col p-4 text-center">
           <h1>{{ count.count }}</h1>
           <p class="flex-1 flex justify-center items-center">{{ count.name }}</p>
@@ -67,6 +67,23 @@
       </ul>
       <nuxt-link to="/stripe/customers" class="text-blue no-underline">See all &rarr;</nuxt-link>
     </template>
+    <template v-if="card.type === 'google.analytics'">
+      <div class="flex flex-col text-center mt-4">
+        <h1 v-if="data" class="mb-4">{{ loading ? '🤔' : data.reports[0].data.totals[0].values[0] }}</h1>
+        <form class="mb-2">
+          <select v-model="google.analytics.expression" @input="updateGoogleAnalyticsData()">
+            <option value="ga:sessions">Sessions</option>
+            <option value="ga:users">Users</option>
+            <option value="ga:pageviews">Page views</option>
+          </select>
+          in the last
+          <select v-model="google.analytics.range.startDate" @input="updateGoogleAnalyticsData()">
+            <option value="7DaysAgo">7 Days</option>
+            <option value="30DaysAgo">30 Days</option>
+          </select>
+        </form>
+      </div>
+    </template>
     <p v-if="status === 'success'" class="text-green" v-text="'Success! 🎉'"/>
     <p v-if="status === 'error'" class="text-red" v-text="'Something went wrong.'"/>
     <slot/>
@@ -87,13 +104,45 @@ export default {
     return {
       data: null,
       status: null,
-      loading: false
+      loading: true,
+      google: {
+        analytics: {
+          range: {
+            startDate: null,
+            endDate: null
+          },
+          expression: null
+        }
+      }
     }
   },
   computed: {
     ...mapGetters(['account', 'dashboard'])
   },
   mounted() {
+    if (this.card.type === 'google.analytics') {
+      this.google.analytics = {
+        range: {
+          startDate: '7DaysAgo',
+          endDate: 'today'
+        },
+        expression: 'ga:sessions'
+      }
+      this.data = {
+        reports: [
+          {
+            data: {
+              totals: [
+                {
+                  values: [0]
+                }
+              ]
+            }
+          }
+        ]
+      }
+      this.updateGoogleAnalyticsData()
+    }
     if (this.card.type === 'intercom.counts.user.segment') {
       this.getIntercomUserSegmentCount(this.card.segments)
     }
@@ -134,6 +183,53 @@ export default {
     },
     updateStatus(status) {
       this.status = status
+    },
+    async getGoogleAnalyticsData(viewId, range, expression) {
+      this.loading = true
+      this.$axios.setToken(`Bearer ${this.account.googleToken}`)
+      await this.$axios({
+        url: 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
+        method: 'post',
+        data: {
+          reportRequests: [
+            {
+              viewId,
+              dateRanges: [
+                {
+                  startDate: range.startDate,
+                  endDate: range.endDate
+                }
+              ],
+              metrics: [
+                {
+                  expression
+                }
+              ]
+            }
+          ]
+        }
+      })
+        .then(response => {
+          this.data = response.data
+          this.loading = false
+        })
+        .catch(error => {
+          this.loading = false
+          console.error(error)
+          this.updateStatus('error')
+        })
+    },
+    updateGoogleAnalyticsData() {
+      setTimeout(() => {
+        this.getGoogleAnalyticsData(
+          this.card.view_ids,
+          {
+            startDate: this.google.analytics.range.startDate,
+            endDate: this.google.analytics.range.endDate
+          },
+          this.google.analytics.expression
+        )
+      }, 1)
     },
     async getIntercomAppCounts(counts) {
       this.loading = true

@@ -11,7 +11,7 @@
               <th>Amount</th>
               <th>Date</th>
               <th>Customer</th>
-              <th/>
+              <th>Receipt</th>
             </tr>
           </thead>
           <tbody>
@@ -29,6 +29,7 @@
               </td>
               <td>
                 <button v-if="charge.customer && !charge.receipt_email" :style="'background-color:' + dashboard.primaryColor" class="rounded ml-2 px-2 py-1 bg-blue text-white text-xs" @click="sendReceipt(charge)">Send Receipt</button>
+                <span v-if="charge.receipt_email" class="inline-block text-center p-1 rounded bg-grey-lighter text-grey-darker text-xs">Sent</span>
               </td>
             </tr>
           </tbody>

@@ -33,6 +33,21 @@
             </a>
           </div>
         </div>
+        <hr class="my-4 -mx-4 border">
+        <h3 class="my-2">
+          <nuxt-link to="/google" class="text-blue no-underline">Google</nuxt-link>
+        </h3>
+        <div class="sm:flex sm:justify-between sm:items-center">
+          <p class="sm:flex-1  mb-2 sm:mb-0">This integrations lets you access Google Analytics to view your website traffic.</p>
+          <div class="w-40 flex justify-end">
+            <button v-if="account.googleToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
+              Remove
+            </button>
+            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?client_id=443756474293-52neei2difkt7lc3r703g2u20uhjevoi.apps.googleusercontent.com&redirect_uri=http://localhost:3000/oauth/google&response_type=token&scope=https://www.googleapis.com/auth/analytics&state=${account.domain}`">
+              <img src="/img/google-sign-in-button.png" srcset="/img/google-sign-in-button.png 1x, /img/google-sign-in-button@2x.png 2x" alt="Sign in with Google" class="h-full w-full">
+            </a>
+          </div>
+        </div>
       </Card>
     </section>
   </main>
@@ -54,7 +69,6 @@ export default {
   },
   methods: {
     removeIntegration(provider) {
-      this.$store.commit('unsetToken', provider)
       this.$apollo
         .mutate({
           mutation: unsetToken,
@@ -65,7 +79,7 @@ export default {
             }
           }
         })
-        .then(response => console.log(response))
+        .then(response => this.$store.commit('unsetToken', provider))
         .catch(error => console.error(error))
     }
   }

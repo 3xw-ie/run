@@ -1,16 +1,16 @@
 <template>
-  <main v-if="account.intercomToken">
+  <main v-if="account.googleToken">
     <section class="container mx-auto">
       <nuxt-link to="/" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Dashboard</nuxt-link>
       <Card>
-        <h2 class="mb-4">Intercom</h2>
+        <h2 class="mb-4">Google</h2>
         <p>More actions coming here soon!</p>
       </Card>
     </section>
   </main>
   <main v-else>
     <Card class="container mx-auto">
-      Please activate your Intercom integration <nuxt-link to="/integrations">here</nuxt-link>.
+      Please activate your Google integration <nuxt-link to="/integrations">here</nuxt-link>.
     </Card>
   </main>
 </template>

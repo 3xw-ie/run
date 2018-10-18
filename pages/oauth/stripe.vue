@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import { getQueryParams } from '~/utils/auth'
-
 export default {
   middleware: 'oauth-stripe',
   layout: 'empty'
