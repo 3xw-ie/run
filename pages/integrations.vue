@@ -28,7 +28,7 @@
             <button v-if="account.stripeToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('stripe')">
               Remove
             </button>
-            <a v-else :href="`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_BgrkpPIf88dSDrpE7D4DVBkn91zFipuB&scope=read_only&state=${account.domain}`">
+            <a v-else :href="`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_BgrkpPIf88dSDrpE7D4DVBkn91zFipuB&scope=read_write&state=${account.domain}`">
               <img src="/img/stripe-connect-button.png" srcset="/img/stripe-connect-button.png 1x, /img/stripe-connect-button@2x.png 2x, /img/stripe-connect-button@3x.png 3x" alt="Connect with Stripe" class="h-full w-full">
             </a>
           </div>
