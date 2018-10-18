@@ -1,6 +1,7 @@
+@@ -1,237 +0,0 @@
 <template>
-  <div class="bg-white shadow-md p-4">
-    <h3>{{ card.title }}</h3>
+  <div class="rounded bg-white shadow-md p-4">
+    <h3 v-if="card.title">{{ card.title }}</h3>
     <template v-if="card.type === 'links'">
       <a
         v-for="link in card.links"
@@ -52,7 +53,7 @@
         </thead>
         <tbody>
           <tr v-for="data in data.data" :key="data.id">
-            <td class="pr-4 capitalize">€{{ data.amount / 100 }}</td>
+            <td class="pr-4">€{{ data.amount / 100 }}</td>
             <td>{{ data.created | moment('Do MMM YYYY') }}</td>
           </tr>
         </tbody>
