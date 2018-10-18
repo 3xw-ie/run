@@ -2,7 +2,7 @@
   <main>
     <section class="container mx-auto">
       <nuxt-link to="/" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Dashboard</nuxt-link>
-      <card>
+      <Card>
         <h2 class="mb-4">Integrations</h2>
         <h3 class="my-2">
           <nuxt-link to="/intercom" class="text-blue no-underline">Intercom</nuxt-link>
@@ -33,7 +33,7 @@
             </a>
           </div>
         </div>
-      </card>
+      </Card>
     </section>
   </main>
 </template>
@@ -41,12 +41,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import unsetToken from '~/apollo/mutations/unsetToken'
-import card from '~/components/card'
+import Card from '~/components/Card'
 
 export default {
   layout: 'dashboard',
   components: {
-    card
+    Card
   },
   computed: mapGetters(['account']),
   beforeCreate() {
