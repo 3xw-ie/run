@@ -1,5 +1,5 @@
 <template>
-  <div :style="card.width ? `grid-column-start: span ${card.width}` : '' + card.height ? `grid-row-start: span ${card.height}` : ''" class="rounded bg-white shadow-md p-4">
+  <div :class="[card.width ? `columns-${card.width}` : '', card.height ? `rows-${card.height}` : '']" class="rounded bg-white shadow-md p-4">
     <h3 v-if="card.title" class="mb-4">{{ card.title }}</h3>
     <p v-if="loading">Loading...</p>
     <template v-if="card.type === 'links'">
