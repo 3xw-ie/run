@@ -17,12 +17,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import card from '~/components/card'
+import Card from '~/components/Card'
 
 export default {
   layout: 'dashboard',
   components: {
-    card
+    Card
   },
   computed: mapGetters(['account']),
   beforeCreate() {
