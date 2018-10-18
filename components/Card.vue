@@ -39,7 +39,13 @@
       </table>
     </template>
     <template v-if="card.type === 'intercom.counts'">
-      <table v-if="!loading">
+      <div v-if="!loading && true" class="flex mt-4">
+        <div v-for="(count, index) in data" :key="count.name" :class="[`w-1/${data.length}`, + index !== data.length - 1 ? 'border-r-2' : '']" class="flex flex-col p-4 text-center">
+          <h1>{{ count.count }}</h1>
+          <p class="flex-1 flex justify-center items-center capitalize">{{ count.name }}</p>
+        </div>
+      </div>
+      <table v-else>
         <tbody>
           <tr v-for="count in data" :key="count.name">
             <td class="pr-4 capitalize">{{ count.name }}</td>
