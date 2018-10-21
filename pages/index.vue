@@ -1,20 +1,20 @@
 <template>
   <main>
     <section class="container mx-auto grid">
-      <Card v-for="card in dashboard.cards" :key="card.title" :card="card"/>
+      <Block v-for="block in dashboard.cards" :key="block.title" :block="block"/>
     </section>
   </main>
 </template>
 
 <script>
-import Card from '~/components/Card'
+import Block from '~/components/Block'
 import { mapGetters } from 'vuex'
 import account from '~/apollo/queries/account'
 
 export default {
   layout: 'dashboard',
   components: {
-    Card
+    Block
   },
   computed: {
     ...mapGetters(['account', 'dashboard'])
