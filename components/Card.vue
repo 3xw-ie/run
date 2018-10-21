@@ -91,8 +91,8 @@
         </form>
       </div>
     </template>
-    <p v-if="status === 'success'" class="text-green" v-text="'Success! 🎉'"/>
-    <p v-if="status === 'error'" class="text-red" v-text="'Something went wrong.'"/>
+    <p v-if="status === 'success'" class="text-green" v-text="statusMessage ? statusMessage : 'Success! 🎉'"/>
+    <p v-if="status === 'error'" class="text-red" v-text="statusMessage ? statusMessage : 'Something went wrong.'"/>
     <slot/>
   </div>
 </template>
@@ -111,6 +111,7 @@ export default {
     return {
       data: null,
       status: null,
+      statusMessage: null,
       loading: true,
       google: {
         analytics: {
@@ -188,8 +189,9 @@ export default {
           this.updateStatus('error')
         })
     },
-    updateStatus(status) {
+    updateStatus(status, message) {
       this.status = status
+      this.statusMessage = message
     },
     async getGoogleAnalyticsData(viewId, range, expression) {
       this.loading = true
@@ -223,7 +225,10 @@ export default {
         .catch(error => {
           this.loading = false
           console.error(error)
-          this.updateStatus('error')
+          this.updateStatus(
+            'error',
+            'Please try removing the Google integration and signing in with Google again.'
+          )
         })
     },
     updateGoogleAnalyticsData() {
