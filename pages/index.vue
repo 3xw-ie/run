@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="container mx-auto grid">
-      <Block v-for="block in dashboard.cards" :key="block.title" :block="block"/>
+      <Block v-for="block in dashboard.blocks" :key="block.title" :block="block"/>
     </section>
   </main>
 </template>
