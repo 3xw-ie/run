@@ -26,7 +26,7 @@ export default {
   },
   computed: mapGetters(['account']),
   beforeCreate() {
-    this.$store.commit('setPageTitle', 'Intercom')
+    this.$store.commit('setPageTitle', 'Google')
   }
 }
 </script>
