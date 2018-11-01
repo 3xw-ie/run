@@ -9,9 +9,12 @@
     </section>
   </main>
   <main v-else>
-    <Card class="container mx-auto">
-      Please activate your Intercom integration <nuxt-link to="/integrations">here</nuxt-link>.
-    </Card>
+    <section class="container mx-auto">
+      <nuxt-link to="/" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Dashboard</nuxt-link>
+      <Card>
+        Please activate your Intercom integration <nuxt-link to="/integrations">here</nuxt-link>.
+      </Card>
+    </section>
   </main>
 </template>
 

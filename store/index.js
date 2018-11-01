@@ -17,8 +17,10 @@ export const mutations = {
       domain: account.domain,
       logo: account.logo ? account.logo.url : null,
       users: account.users,
+      eventbriteToken: account.eventbriteToken,
       googleToken: account.googleToken,
       intercomToken: account.intercomToken,
+      sendgridToken: account.sendgridToken,
       stripeToken: account.stripeToken
     }
   },

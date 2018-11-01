@@ -4,8 +4,10 @@ query account ($domain: String!) {
   } ) {
     name
     domain
+    eventbriteToken
     googleToken
     intercomToken
+    sendgridToken
     stripeToken
     logo {
       url

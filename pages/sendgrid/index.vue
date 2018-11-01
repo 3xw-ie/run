@@ -1,9 +1,9 @@
 <template>
-  <main v-if="account.googleToken">
+  <main v-if="account.sendgridToken">
     <section class="container mx-auto">
       <nuxt-link to="/" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Dashboard</nuxt-link>
       <Card>
-        <h2 class="mb-4">Google</h2>
+        <h2 class="mb-4">Sendgrid</h2>
         <p>More actions coming here soon!</p>
       </Card>
     </section>
@@ -12,7 +12,7 @@
     <section class="container mx-auto">
       <nuxt-link to="/" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Dashboard</nuxt-link>
       <Card>
-        Please activate your Google integration <nuxt-link to="/integrations">here</nuxt-link>.
+        Please activate your Sendgrid integration <nuxt-link to="/integrations">here</nuxt-link>.
       </Card>
     </section>
   </main>
@@ -29,7 +29,7 @@ export default {
   },
   computed: mapGetters(['account']),
   beforeCreate() {
-    this.$store.commit('setPageTitle', 'Google')
+    this.$store.commit('setPageTitle', 'Sendgrid')
   }
 }
 </script>

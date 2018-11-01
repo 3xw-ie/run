@@ -15,7 +15,7 @@ import navbar from '~/components/navbar'
 import { mapGetters } from 'vuex'
 
 export default {
-  head: function() {
+  head() {
     return {
       title: this.metaTitle
     }

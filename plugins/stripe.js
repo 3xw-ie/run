@@ -1,6 +1,9 @@
+import status from '~/plugins/status'
 import { mapGetters } from 'vuex'
+import queryString from 'query-string'
 
 const stripe = {
+  mixins: [status],
   data() {
     return {
       charges: [],
@@ -8,33 +11,40 @@ const stripe = {
     }
   },
   computed: {
+    stripeConfig() {
+      return {
+        baseURL: 'https://api.stripe.com/v1',
+        headers: {
+          Authorization: `Bearer ${this.account.stripeToken}`,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    },
     ...mapGetters(['account'])
   },
   methods: {
     async getStripeCharges(limit = 50) {
-      this.loading = true
-      this.$axios.setToken('Bearer ' + this.account.stripeToken)
+      this.updateStatus('loading')
       await this.$axios({
-        url: `https://api.stripe.com/v1/charges?limit=${limit}`
+        url: `/charges?limit=${limit}`,
+        ...this.stripeConfig
       })
         .then(response => {
-          this.loading = false
           this.charges = response.data
+          this.updateStatus('ready')
         })
         .catch(error => {
-          this.loading = false
           console.error(error)
+          this.updateStatus('error')
         })
     },
     async updateStripeCharge(charge, data) {
-      this.$axios.setToken('Bearer ' + this.account.stripeToken)
+      this.updateStatus('loading')
       await this.$axios({
-        url: `https://api.stripe.com/v1/charges/${charge.id}`,
+        url: `/charges/${charge.id}`,
         method: 'post',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data
+        data,
+        ...this.stripeConfig
       })
         .then(response => {
           this.charges.data.splice(
@@ -42,35 +52,35 @@ const stripe = {
             1,
             response.data
           )
+          this.updateStatus('ready')
         })
         .catch(error => {
           console.error(error)
+          this.updateStatus('error')
         })
     },
     async getStripeCustomers(limit = 50) {
-      this.loading = true
-      this.$axios.setToken(`Bearer ${this.account.stripeToken}`)
+      this.updateStatus('loading')
       await this.$axios({
-        url: `https://api.stripe.com/v1/customers?limit=${limit}`
+        url: `/customers?limit=${limit}`,
+        ...this.stripeConfig
       })
         .then(response => {
-          this.loading = false
           this.customers = response.data
+          this.updateStatus('ready')
         })
         .catch(error => {
-          this.loading = false
           console.error(error)
+          this.updateStatus('error')
         })
     },
     async createStripeCustomer() {
-      this.$axios.setToken(`Bearer ${this.account.stripeToken}`)
+      this.updateStatus('loading')
       await this.$axios({
-        url: 'https://api.stripe.com/v1/customers',
+        url: '/customers',
         method: 'post',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        data: queryString.stringify(this.customer)
+        data: queryString.stringify(this.customer),
+        ...this.stripeConfig
       })
         .then(response => {
           this.customers.data.push(response.data)
@@ -78,38 +88,41 @@ const stripe = {
             email: null,
             description: null
           }
+          this.updateStatus('success')
         })
         .catch(error => {
           console.error(error)
+          this.updateStatus('error')
         })
     },
     async getStripeBalance() {
-      this.loading = true
-      this.$axios.setToken('Bearer ' + this.account.stripeToken)
+      this.updateStatus('loading')
       await this.$axios({
-        url: 'https://api.stripe.com/v1/balance'
+        url: '/balance'
       })
         .then(response => {
-          this.loading = false
           this.data = response.data
+          this.updateStatus('ready')
         })
         .catch(error => {
-          this.loading = false
           console.error(error)
           this.updateStatus('error')
         })
     },
     findCharge(id) {
-      return this.charges.data.findIndex(charge => charge.id === id)
+      return this.charges.data.find(charge => charge.id === id)
     },
     findChargeIndex(id) {
-      return this.charges.data.find(charge => charge.id === id)
+      return this.charges.data.findIndex(charge => charge.id === id)
     },
     findCustomer(id) {
       return this.customers.data.find(customer => customer.id === id)
     },
     findCustomerIndex(id) {
       return this.customers.data.findIndex(customer => customer.id === id)
+    },
+    linkCustomer(charge, customer) {
+      this.updateStripeCharge(charge, queryString.stringify({ customer }))
     },
     sendReceipt(charge) {
       charge.receipt_email = this.findCustomer(charge.customer).email

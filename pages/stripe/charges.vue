@@ -4,7 +4,7 @@
       <nuxt-link to="/stripe" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Stripe</nuxt-link>
       <Card class="overflow-x-scroll">
         <h2 class="mb-4">Charges</h2>
-        <table v-if="!loading && charges">
+        <table v-if="!loading && charges.data">
           <thead class="text-left">
             <tr>
               <th>Status</th>
@@ -24,8 +24,8 @@
               <td class="pr-8">€{{ charge.amount / 100 }}</td>
               <td class="pr-8">{{ charge.created | moment('Do MMM YYYY') }}</td>
               <td class="pr-8">
-                {{ charge.customer && customers ? findCustomer(charge.customer).email : (charge.source.name ? charge.source.name : 'n/a') }}
-                <button v-if="!charge.customer" :style="'background-color:' + dashboard.primaryColor" class="rounded ml-2 px-2 py-1 bg-blue text-white text-xs" @click="linkCustomer(charge)">+ Link customer</button>
+                {{ charge.customer && customers.data ? findCustomer(charge.customer).email : (charge.source.name ? charge.source.name : 'n/a') }}
+                <button v-if="!charge.customer" :style="'background-color:' + dashboard.primaryColor" class="rounded ml-2 px-2 py-1 bg-blue text-white text-xs" @click="openLinkCustomerModal(charge)">+ Link customer</button>
               </td>
               <td>
                 <button v-if="charge.customer && !charge.receipt_email" :style="'background-color:' + dashboard.primaryColor" class="rounded ml-2 px-2 py-1 bg-blue text-white text-xs" @click="sendReceipt(charge)">Send Receipt</button>
@@ -37,15 +37,14 @@
         <p v-else>Loading...</p>
       </Card>
     </section>
-    <Modal :visible="chargeModal.visible" @hide="chargeModal.visible = false">
+    <Modal :visible="chargeModal.visible" :title="`Charge ${chargeModal.data.charge.id}`" @hide="chargeModal.visible = false">
       <form v-if="chargeModal.data">
-        <h3 class="mb-4">Charge {{ chargeModal.data.charge.id }}</h3>
         <label for="customer">Customer</label>
-        <select v-model="customer" name="customer" class="mb-2">
+        <select v-model="chargeModal.data.customer" name="customer" class="mb-2">
           <option v-for="customer in chargeModal.data.customers" :key="customer.id" :value="customer.id">{{ customer.email }}</option>
         </select>
         <nuxt-link to="/stripe/customers" class="block text-blue no-underline mb-4 text-sm">Create a customer &rarr;</nuxt-link>
-        <button :style="'background-color:' + dashboard.primaryColor" type="submit" class="block p-2 rounded bg-blue text-white" @click.prevent="updateCharge(chargeModal.data.charge)">Update</button>
+        <button :style="'background-color:' + dashboard.primaryColor" type="submit" class="block p-2 rounded bg-blue text-white" @click.prevent="linkCustomer(chargeModal.data.charge, chargeModal.data.customer); closeLinkCustomerModal()">Update</button>
       </form>
     </Modal>
   </main>
@@ -53,6 +52,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import status from '~/plugins/status'
 import stripe from '~/plugins/stripe'
 import queryString from 'query-string'
 import Card from '~/components/Card'
@@ -64,16 +64,18 @@ export default {
     Card,
     Modal
   },
-  mixins: [stripe],
+  mixins: [status, stripe],
   data() {
     return {
-      loading: false,
-      charges: null,
-      customers: null,
       chargeModal: {
+        data: {
+          charge: {
+            id: null
+          },
+          customers: null
+        },
         visible: false
-      },
-      customer: null
+      }
     }
   },
   computed: mapGetters(['account', 'dashboard']),
@@ -85,23 +87,17 @@ export default {
     this.getStripeCustomers()
   },
   methods: {
-    linkCustomer(charge) {
-      this.chargeModal.visible = true
+    openLinkCustomerModal(charge) {
       this.chargeModal.data = {
         charge,
-        customers: this.customers.data
+        customers: this.customers.data,
+        customer: null
       }
+      this.chargeModal.visible = true
     },
-    updateCharge(charge) {
+    closeLinkCustomerModal(charge, customer) {
       this.chargeModal.visible = false
-      charge.customer = this.customer
-      this.updateStripeCharge(
-        charge,
-        queryString.stringify({
-          customer: charge.customer
-        })
-      )
-      this.customer = null
+      this.chargeModal.data.customer = null
     }
   }
 }

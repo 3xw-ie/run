@@ -1,28 +1,38 @@
+import status from '~/plugins/status'
 import { mapGetters } from 'vuex'
 
 const intercom = {
+  mixins: [status],
   data() {
     return {
       counts: [],
-      segments: []
+      segments: [],
+      users: {},
+      leads: {}
     }
   },
   computed: {
+    intercomConfig() {
+      return {
+        baseURL: `https://api.3xw.app/intercom/${this.account.intercomToken}`
+      }
+    },
     ...mapGetters(['account'])
   },
   methods: {
     async getIntercomAppCounts(counts) {
+      this.updateStatus('loading')
       await this.$axios({
-        url: `https://api.3xw.app/intercom/${
-          this.account.intercomToken
-        }/counts`,
-        method: 'get'
+        url: '/counts',
+        ...this.intercomConfig
       })
         .then(response => {
           this.counts = this.prepareIntercomCounts(response.data)
+          this.updateStatus('ready')
         })
         .catch(error => {
           console.error(error)
+          this.updateStatus('error')
         })
     },
     prepareIntercomCounts(counts) {
@@ -47,17 +57,20 @@ const intercom = {
       return output
     },
     async getIntercomUserSegmentCount(segments) {
+      this.updateStatus('loading')
       await this.$axios({
-        url: `https://api.3xw.app/intercom/${this.account.intercomToken}/counts?type=user&count=segment`, // eslint-disable-line
-        method: 'get'
+        url: '/counts?type=user&count=segment',
+        ...this.intercomConfig
       })
         .then(response => {
           this.segments = this.prepareIntercomSegments(
             response.data.user.segment
           )
+          this.updateStatus('ready')
         })
         .catch(error => {
           console.error(error)
+          this.updateStatus('error')
         })
     },
     prepareIntercomSegments(segments) {
@@ -82,6 +95,36 @@ const intercom = {
         })
       }
       return output
+    },
+    async getIntercomUsers() {
+      this.updateStatus('loading')
+      await this.$axios({
+        url: '/users',
+        ...this.intercomConfig
+      })
+        .then(response => {
+          this.users = response.data
+          this.updateStatus('ready')
+        })
+        .catch(error => {
+          console.error(error)
+          this.updateStatus('error')
+        })
+    },
+    async getIntercomLeads({ email }) {
+      this.updateStatus('loading')
+      await this.$axios({
+        url: `/contacts${email ? '?email' : ''}`,
+        ...this.intercomConfig
+      })
+        .then(response => {
+          this.leads = response.data
+          this.updateStatus('ready')
+        })
+        .catch(error => {
+          console.error(error)
+          this.updateStatus('error')
+        })
     }
   }
 }

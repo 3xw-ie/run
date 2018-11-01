@@ -47,21 +47,16 @@
 <script>
 import { mapGetters } from 'vuex'
 import stripe from '~/plugins/stripe'
-import queryString from 'query-string'
 import Card from '~/components/Card'
-import Modal from '~/components/Modal'
 
 export default {
   layout: 'dashboard',
   components: {
-    Card,
-    Modal
+    Card
   },
   mixins: [stripe],
   data() {
     return {
-      loading: false,
-      customers: null,
       customer: {
         email: null,
         description: null

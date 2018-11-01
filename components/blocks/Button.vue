@@ -1,7 +1,7 @@
 <template>
   <figure>
     <button
-      :style="'background-color:' + dashboard.primaryColor"
+      :style="`background-color: ${dashboard.primaryColor}`"
       type="submit"
       class="px-3 py-2 rounded my-4 text-white"
       @click.prevent="handleButtonClick()"
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     block: {
@@ -18,6 +20,7 @@ export default {
       default: null
     }
   },
+  computed: mapGetters(['dashboard']),
   methods: {
     async handleButtonClick() {
       this.loading = true

@@ -38,13 +38,52 @@
           <nuxt-link to="/google" class="text-blue no-underline">Google</nuxt-link>
         </h3>
         <div class="sm:flex sm:justify-between sm:items-center">
-          <p class="sm:flex-1  mb-2 sm:mb-0">This integrations lets you access Google Analytics to view your website traffic.</p>
+          <p class="sm:flex-1  mb-2 sm:mb-0">This integration lets you access Google Analytics to view your website traffic.</p>
           <div class="w-40 flex justify-end">
             <button v-if="account.googleToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
               Remove
             </button>
             <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?client_id=443756474293-52neei2difkt7lc3r703g2u20uhjevoi.apps.googleusercontent.com&redirect_uri=https://run.3xw.app/oauth/google&response_type=token&scope=https://www.googleapis.com/auth/analytics&state=${account.domain}`">
               <img src="/img/google-sign-in-button.png" srcset="/img/google-sign-in-button.png 1x, /img/google-sign-in-button@2x.png 2x" alt="Sign in with Google" class="h-full w-full">
+            </a>
+          </div>
+        </div>
+        <hr class="my-4 -mx-4 border">
+        <h3 class="my-2">
+          <nuxt-link to="/sendgrid" class="text-blue no-underline">Sendgrid</nuxt-link>
+        </h3>
+        <div class="sm:flex sm:justify-between sm:items-center">
+          <p class="sm:flex-1  mb-2 sm:mb-0">This integration lets you send emails with Sendgrid and get metrics on your previously sent emails.</p>
+          <div class="w-40 flex justify-end">
+            <button v-if="account.sendgridToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('sendgrid')">
+              Remove
+            </button>
+            <button v-else class="px-3 py-2 rounded ml-4 bg-blue text-white" @click.prevent="displayModal('sendgridModal')">
+              Add Sendgrid
+            </button>
+          </div>
+          <Modal :visible="sendgridModal.visible" title="Sendgrid API Key" @hide="sendgridModal.visible = false">
+            <form class="flex items-center mb-4">
+              <label for="sendgridToken" class="mr-2">API Key:</label>
+              <input v-model="sendgridToken" name="sendgridToken" class="flex-1 p-2 rounded bg-grey-lighter">
+              <button :style="`background-color: ${dashboard.primaryColor}`" type="submit" class="px-3 py-2 rounded ml-2 bg-blue text-white" @click.prevent="addIntegration('sendgrid', sendgridToken); hideModal('sendgridModal')">
+                Submit
+              </button>
+            </form>
+          </Modal>
+        </div>
+        <hr class="my-4 -mx-4 border">
+        <h3 class="my-2">
+          <nuxt-link to="/eventbrite" class="text-blue no-underline">Eventbrite</nuxt-link>
+        </h3>
+        <div class="sm:flex sm:justify-between sm:items-center">
+          <p class="sm:flex-1  mb-2 sm:mb-0">This integration lets you pull in your events from Eventbrite.</p>
+          <div class="w-40 flex justify-end">
+            <button v-if="account.eventbriteToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('eventbrite')">
+              Remove
+            </button>
+            <a v-else :href="`https://www.eventbrite.com/oauth/authorize?response_type=token&client_id=KZKTUHCEQUG4KT7Z3R&state=${account.domain}`" class="px-3 py-2 rounded ml-4 bg-blue text-white no-underline">
+              Add Eventbrite
             </a>
           </div>
         </div>
@@ -55,19 +94,47 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import setToken from '~/apollo/mutations/setToken'
 import unsetToken from '~/apollo/mutations/unsetToken'
 import Card from '~/components/Card'
+import Modal from '~/components/Modal'
 
 export default {
   layout: 'dashboard',
   components: {
-    Card
+    Card,
+    Modal
   },
-  computed: mapGetters(['account']),
+  data() {
+    return {
+      sendgridModal: {
+        visible: false
+      },
+      sendgridToken: null
+    }
+  },
+  computed: mapGetters(['account', 'dashboard']),
   beforeCreate() {
     this.$store.commit('setPageTitle', 'Integrations')
   },
   methods: {
+    addIntegration(provider, token) {
+      this.$apollo
+        .mutate({
+          mutation: setToken,
+          variables: {
+            domain: this.account.domain,
+            data: {
+              [`${provider}Token`]: token
+            }
+          }
+        })
+        .then(response => {
+          this.$store.commit('setToken', provider, token)
+          window.location = '/integrations'
+        })
+        .catch(error => console.error(error))
+    },
     removeIntegration(provider) {
       this.$apollo
         .mutate({
@@ -81,6 +148,12 @@ export default {
         })
         .then(response => this.$store.commit('unsetToken', provider))
         .catch(error => console.error(error))
+    },
+    displayModal(modal) {
+      this[modal].visible = true
+    },
+    hideModal(modal) {
+      this[modal].visible = false
     }
   }
 }

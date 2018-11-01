@@ -4,12 +4,18 @@ import { mapGetters } from 'vuex'
 const google = {
   mixins: [status],
   computed: {
+    googleConfig() {
+      return {
+        headers: {
+          Authorization: `Bearer ${this.account.googleToken}`
+        }
+      }
+    },
     ...mapGetters(['account'])
   },
   methods: {
     async getGoogleAnalyticsData(viewId, range, expression) {
       this.updateStatus('loading')
-      this.$axios.setToken(`Bearer ${this.account.googleToken}`)
       await this.$axios({
         url: 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
         method: 'post',
@@ -30,14 +36,14 @@ const google = {
               ]
             }
           ]
-        }
+        },
+        ...this.googleConfig
       })
         .then(response => {
           this.data = response.data
           this.updateStatus('ready')
         })
         .catch(error => {
-          this.loading = false
           console.error(error)
           this.updateStatus(
             'error',
