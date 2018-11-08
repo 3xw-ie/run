@@ -5,7 +5,15 @@
       <Card>
         <h2 class="mb-4">Eventbrite</h2>
         <h3 class="mb-4">Events</h3>
-        <Table :data="events.events"/>
+        <div v-for="event in events.events" :key="event.id" class="flex">
+          <div class="w-1/2">
+            <img :src="event.logo.url" alt="Event Image">
+          </div>
+          <div class="w-1/2">
+            <h3>{{ event.name.text }}</h3>
+            <div v-html="event.description.html"/>
+          </div>
+        </div>
       </Card>
     </section>
   </main>
@@ -22,14 +30,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import Card from '~/components/Card'
-import Table from '~/components/Table'
 import eventbrite from '~/plugins/eventbrite'
 
 export default {
   layout: 'dashboard',
   components: {
-    Card,
-    Table
+    Card
   },
   mixins: [eventbrite],
   computed: mapGetters(['account']),

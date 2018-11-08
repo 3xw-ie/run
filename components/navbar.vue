@@ -2,6 +2,7 @@
   <nav class="mr-2">
     <nuxt-link to="/" class="text-inherit no-underline mr-4">Home</nuxt-link>
     <nuxt-link to="/users" class="text-inherit no-underline mr-4">Users</nuxt-link>
+    <nuxt-link to="/emails" class="text-inherit no-underline mr-4">Emails</nuxt-link>
     <span class="group relative h-full flex items-center">
       <div class="group-hover:block hidden absolute pin-t mt-16 -mx-4 p-4 rounded-b bg-white shadow-md">
         <nuxt-link to="/eventbrite" class="inline-block text-black no-underline mb-4">Eventbrite</nuxt-link>

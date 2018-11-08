@@ -70,6 +70,7 @@
                 Submit
               </button>
             </form>
+            <a href="https://sendgrid.com/docs/ui/account-and-settings/api-keys/#creating-an-api-key" target="_blank" class="text-blue no-underline">Learn how to get a Sendgrid API key.</a>
           </Modal>
         </div>
         <hr class="my-4 -mx-4 border">
