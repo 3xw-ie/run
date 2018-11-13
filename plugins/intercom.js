@@ -14,7 +14,9 @@ const intercom = {
   computed: {
     intercomConfig() {
       return {
-        baseURL: `https://api.3xw.app/intercom/${this.account.intercomToken}`
+        baseURL: `https://api.3xw.app/rest/intercom/${
+          this.account.intercomToken
+        }`
       }
     },
     ...mapGetters(['account'])
