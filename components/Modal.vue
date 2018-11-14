@@ -1,5 +1,5 @@
 <template>
-  <main v-show="visible" class="fixed pin h-screen z-auto flex justify-center items-center" style="background-color: rgba(0, 0, 0, 0.5)" @click.self="hide()">
+  <main v-show="visible" class="fixed pin h-screen z-auto flex justify-center items-center" style="background-color: rgba(0, 0, 0, 0.5)" @click.self="visible = false">
     <Card class="min-w-md">
       <h3 v-if="title" class="mb-4">{{ title }}</h3>
       <slot/>
@@ -15,18 +15,23 @@ export default {
     Card
   },
   props: {
-    visible: {
+    show: {
       type: Boolean,
       default: false
     },
     title: {
       type: String,
-      default: ''
+      default: null
     }
   },
-  methods: {
-    hide() {
-      this.$emit('hide')
+  data() {
+    return {
+      visible: false
+    }
+  },
+  created() {
+    if (this.show) {
+      this.visible = true
     }
   }
 }

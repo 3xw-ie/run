@@ -7,7 +7,9 @@ mutation setToken ($domain: String! $data: AccountUpdateInput!) {
   ) {
     name
     domain
-    googleToken
+    eventbriteToken
+    googleAccessToken
+    googleRefreshToken
     intercomToken
     sendgridToken
     stripeToken

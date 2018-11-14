@@ -24,13 +24,13 @@ const stripe = {
   methods: {
     async getEventbriteUser(id = 'me') {
       this.updateStatus('loading')
-      await this.$axios({
+      return await this.$axios({
         url: `/users/${id}/`,
         ...this.eventbriteConfig
       })
         .then(response => {
-          this.user = response.data
           this.updateStatus('ready')
+          return response.data
         })
         .catch(error => {
           console.error(error)
@@ -39,13 +39,13 @@ const stripe = {
     },
     async getEventbriteUserEvents(id = 'me') {
       this.updateStatus('loading')
-      await this.$axios({
+      return await this.$axios({
         url: `/users/${id}/owned_events/`,
         ...this.eventbriteConfig
       })
         .then(response => {
-          this.events = response.data
           this.updateStatus('ready')
+          return response.data
         })
         .catch(error => {
           console.error(error)

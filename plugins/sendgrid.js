@@ -6,17 +6,23 @@ const sendgrid = {
   data() {
     return {
       templates: null,
-      dynamic_template_data: {},
       to: {},
       email: {
         personalizations: [
           {
             to: [
               {
+                email: 'stephen@narration.ie',
+                name: 'Stephen Ryan'
+              }
+            ],
+            cc: [
+              {
                 email: 'dave@3xw.ie',
                 name: 'Dave Calnan'
               }
             ],
+            bcc: [],
             dynamic_template_data: {
               //
             }
@@ -108,6 +114,12 @@ const sendgrid = {
           time: moment(event.end.local).format('ha')
         },
         image: event.logo.url
+      }))
+    },
+    prepareIntercomUsersForSendgrid(users) {
+      return users.map(user => ({
+        name: user.name,
+        email: user.email
       }))
     }
   }

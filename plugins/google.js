@@ -7,7 +7,7 @@ const google = {
     googleConfig() {
       return {
         headers: {
-          Authorization: `Bearer ${this.account.googleToken}`
+          Authorization: `Bearer ${this.account.googleAccessToken}`
         }
       }
     },

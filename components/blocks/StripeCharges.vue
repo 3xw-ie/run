@@ -21,7 +21,9 @@ export default {
     }
   },
   mounted() {
-    this.getStripeCharges(5)
+    this.getStripeCharges({
+      limit: 5
+    })
   }
 }
 </script>

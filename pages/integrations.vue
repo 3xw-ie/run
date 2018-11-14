@@ -40,10 +40,10 @@
         <div class="sm:flex sm:justify-between sm:items-center">
           <p class="sm:flex-1  mb-2 sm:mb-0">This integration lets you access Google Analytics to view your website traffic.</p>
           <div class="w-40 flex justify-end">
-            <button v-if="account.googleToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
+            <button v-if="account.googleAccessToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
               Remove
             </button>
-            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?client_id=443756474293-52neei2difkt7lc3r703g2u20uhjevoi.apps.googleusercontent.com&redirect_uri=https://run.3xw.app/oauth/google&response_type=token&scope=https://www.googleapis.com/auth/analytics&state=${account.domain}`">
+            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly&response_type=code&client_id=443756474293-52neei2difkt7lc3r703g2u20uhjevoi.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fgoogle&state=${account.domain}&prompt=consent`">
               <img src="/img/google-sign-in-button.png" srcset="/img/google-sign-in-button.png 1x, /img/google-sign-in-button@2x.png 2x" alt="Sign in with Google" class="h-full w-full">
             </a>
           </div>
@@ -137,14 +137,23 @@ export default {
         .catch(error => console.error(error))
     },
     removeIntegration(provider) {
+      let data
+      if (provider === 'google') {
+        data = {
+          googleAccessToken: null,
+          googleRefreshToken: null
+        }
+      } else {
+        data = {
+          [`${provider}Token`]: null
+        }
+      }
       this.$apollo
         .mutate({
           mutation: unsetToken,
           variables: {
             domain: this.account.domain,
-            data: {
-              [`${provider}Token`]: null
-            }
+            data
           }
         })
         .then(response => this.$store.commit('unsetToken', provider))

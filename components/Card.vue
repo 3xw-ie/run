@@ -12,6 +12,9 @@ export default {
     this.$on('updateStatus', status =>
       this.$parent.$emit('updateStatus', status)
     )
+    this.$on('selectedItems', selectedItems =>
+      this.$parent.$emit('selectedItems', selectedItems)
+    )
   }
 }
 </script>

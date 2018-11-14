@@ -1,5 +1,5 @@
 <template>
-  <nuxt :style="'background-color:' + dashboard.backgroundColor" class="min-h-screen w-full flex justify-center items-center bg-grey"/>
+  <nuxt :style="'background-color:'" class="min-h-screen w-full flex justify-center items-center bg-grey"/>
 </template>
 
 <script>

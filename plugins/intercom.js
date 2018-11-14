@@ -14,9 +14,10 @@ const intercom = {
   computed: {
     intercomConfig() {
       return {
-        baseURL: `https://api.3xw.app/rest/intercom/${
-          this.account.intercomToken
-        }`
+        baseURL: 'http://localhost:4001/rest/intercom/',
+        headers: {
+          Authorization: `Bearer ${this.account.id}`
+        }
       }
     },
     ...mapGetters(['account'])
@@ -100,13 +101,14 @@ const intercom = {
     },
     async getIntercomUsers() {
       this.updateStatus('loading')
-      await this.$axios({
+      return await this.$axios({
         url: '/users',
         ...this.intercomConfig
       })
         .then(response => {
           this.users = response.data
           this.updateStatus('ready')
+          return response.data
         })
         .catch(error => {
           console.error(error)

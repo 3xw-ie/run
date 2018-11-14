@@ -13,12 +13,14 @@ export const mutations = {
   },
   SET_ACCOUNT(state, account) {
     state.account = {
+      id: account.id,
       name: account.name,
       domain: account.domain,
       logo: account.logo ? account.logo.url : null,
       users: account.users,
       eventbriteToken: account.eventbriteToken,
-      googleToken: account.googleToken,
+      googleAccessToken: account.googleAccessToken,
+      googleRefreshToken: account.googleRefreshToken,
       intercomToken: account.intercomToken,
       sendgridToken: account.sendgridToken,
       stripeToken: account.stripeToken
@@ -43,7 +45,10 @@ export const getters = {
     return !!state.user
   },
   isAuthorized(state) {
-    return state.account.users.some(user => user.email === state.user.email)
+    if (state.account.users) {
+      return state.account.users.some(user => user.email === state.user.email)
+    }
+    return false
   },
   user(state) {
     return state.user

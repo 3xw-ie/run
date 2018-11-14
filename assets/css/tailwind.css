@@ -64,3 +64,14 @@
  .text-inherit {
    color: inherit;
  }
+
+ .group:focus .group-focus\:text-blue {
+  @apply text-blue;
+}
+
+ .group:focus .group-focus\:hidden {
+  @apply hidden;
+}
+ .group:focus .group-focus\:block {
+  @apply block;
+}

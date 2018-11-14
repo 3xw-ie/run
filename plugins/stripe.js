@@ -13,20 +13,20 @@ const stripe = {
   computed: {
     stripeConfig() {
       return {
-        baseURL: 'https://api.stripe.com/v1',
+        baseURL: 'http://localhost:4001/rest/stripe',
         headers: {
-          Authorization: `Bearer ${this.account.stripeToken}`,
-          'Content-Type': 'application/x-www-form-urlencoded'
+          Authorization: `Bearer ${this.account.id}`
         }
       }
     },
     ...mapGetters(['account'])
   },
   methods: {
-    async getStripeCharges(limit = 50) {
+    async getStripeCharges(params) {
       this.updateStatus('loading')
       await this.$axios({
-        url: `/charges?limit=${limit}`,
+        url: '/charges',
+        params,
         ...this.stripeConfig
       })
         .then(response => {
@@ -59,10 +59,11 @@ const stripe = {
           this.updateStatus('error')
         })
     },
-    async getStripeCustomers(limit = 50) {
+    async getStripeCustomers(params) {
       this.updateStatus('loading')
       await this.$axios({
-        url: `/customers?limit=${limit}`,
+        url: '/customers',
+        params,
         ...this.stripeConfig
       })
         .then(response => {

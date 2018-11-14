@@ -21,7 +21,7 @@ export default {
     }
   },
   mounted() {
-    this.getStripeCustomers(5)
+    this.getStripeCustomers({ limit: 5 })
   }
 }
 </script>

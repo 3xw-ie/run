@@ -2,10 +2,12 @@ query account ($domain: String!) {
   account(where: {
     domain: $domain
   } ) {
+    id
     name
     domain
     eventbriteToken
-    googleToken
+    googleAccessToken
+    googleRefreshToken
     intercomToken
     sendgridToken
     stripeToken
