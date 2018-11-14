@@ -13,7 +13,7 @@ const stripe = {
   computed: {
     stripeConfig() {
       return {
-        baseURL: 'http://api.3xw.app/rest/stripe',
+        baseURL: 'https://api.3xw.app/rest/stripe',
         headers: {
           Authorization: `Bearer ${this.account.id}`
         }
