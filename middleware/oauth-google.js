@@ -3,7 +3,7 @@ import setToken from '~/apollo/mutations/setToken'
 
 export default async function({ query, app, redirect }) {
   await axios({
-    url: 'http://localhost:4001/rest/google/oauth/authenticate',
+    url: 'https://api.3xw.app/rest/google/oauth/authenticate',
     method: 'post',
     data: {
       code: query.code

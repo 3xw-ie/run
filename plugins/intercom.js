@@ -14,7 +14,7 @@ const intercom = {
   computed: {
     intercomConfig() {
       return {
-        baseURL: 'http://localhost:4001/rest/intercom/',
+        baseURL: 'http://api.3xw.app/rest/intercom/',
         headers: {
           Authorization: `Bearer ${this.account.id}`
         }
