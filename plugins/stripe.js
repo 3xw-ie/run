@@ -12,7 +12,7 @@ const stripe = {
   computed: {
     stripeConfig() {
       return {
-        baseURL: `${process.env.REST_API_ENDPOINT}/rest/stripe`,
+        baseURL: `${process.env.REST_API_ENDPOINT}/stripe`,
         headers: {
           Authorization: `Bearer ${this.account.id}`
         }

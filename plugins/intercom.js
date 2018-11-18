@@ -14,7 +14,7 @@ const intercom = {
   computed: {
     intercomConfig() {
       return {
-        baseURL: `${process.env.REST_API_ENDPOINT}/rest/intercom/`,
+        baseURL: `${process.env.REST_API_ENDPOINT}/intercom/`,
         headers: {
           Authorization: `Bearer ${this.account.id}`
         }

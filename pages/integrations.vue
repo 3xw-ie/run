@@ -43,7 +43,7 @@
             <button v-if="account.googleRefreshToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
               Remove
             </button>
-            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly&response_type=code&client_id=${env.GOOGLE_CLIENT_ID}&redirect_uri=${getRedirectURI('/oauth/google')}&state=${account.domain}&prompt=consent`">
+            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https://www.googleapis.com/auth/analytics.readonly&response_type=code&client_id=${env.GOOGLE_CLIENT_ID}&redirect_uri=${env.APP_DOMAIN}/oauth/google&state=${account.domain}&prompt=consent`">
               <img src="/img/google-sign-in-button.png" srcset="/img/google-sign-in-button.png 1x, /img/google-sign-in-button@2x.png 2x" alt="Sign in with Google" class="h-full w-full">
             </a>
           </div>
@@ -116,6 +116,7 @@ export default {
   computed: {
     env() {
       return {
+        APP_DOMAIN: process.env.APP_DOMAIN,
         EVENTBRITE_CLIENT_ID: process.env.EVENTBRITE_CLIENT_ID,
         GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
         INTERCOM_CLIENT_ID: process.env.INTERCOM_CLIENT_ID,
@@ -172,10 +173,8 @@ export default {
         .then(response => this.$store.commit('unsetToken', provider))
         .catch(error => console.error(error))
     },
-    getRedirectURI(path) {
-      const scheme =
-        this.account.domain === 'localhost:3000' ? 'http://' : 'https://'
-      return scheme.concat(this.account.domain, path ? path : '/integrations')
+    getURLScheme(domain) {
+      return domain === 'localhost:3000' ? 'http://' : 'https://'
     }
   }
 }

@@ -3,7 +3,7 @@ import updateAccount from '~/apollo/mutations/updateAccount'
 
 export default async function({ query, app, redirect }) {
   await axios({
-    url: `${process.env.REST_API_ENDPOINT}/rest/google/oauth/authenticate`,
+    url: `${process.env.REST_API_ENDPOINT}/google/oauth/authenticate`,
     method: 'post',
     data: {
       code: query.code

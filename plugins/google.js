@@ -6,6 +6,7 @@ const google = {
   computed: {
     googleConfig() {
       return {
+        baseURL: `${process.env.REST_API_ENDPOINT}/google`,
         headers: {
           Authorization: `Bearer ${this.account.id}`
         }
@@ -17,7 +18,7 @@ const google = {
     async getGoogleAnalyticsData(viewId, range, expression) {
       this.updateStatus('loading')
       await this.$axios({
-        url: `${process.env.REST_API_ENDPOINT}/rest/google/analytics/batchGet`,
+        url: `/analytics/batchGet`,
         method: 'post',
         data: {
           viewId,
