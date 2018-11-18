@@ -7,11 +7,12 @@ export default async function({ query, app, redirect }) {
     method: 'post',
     data: {
       code: query.code,
-      client_secret: 'sk_live_VrqimqBX6rGmvGIWlkd7FXW3',
+      client_secret: process.env.STRIPE_CLIENT_SECRET,
       grant_type: 'authorization_code'
     }
   })
     .then(response => {
+      console.log(response)
       app.apolloProvider.clients.defaultClient.mutate({
         mutation: updateAccount,
         variables: {
