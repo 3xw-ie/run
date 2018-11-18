@@ -13,7 +13,7 @@
             <button v-if="account.intercomToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('intercom')">
               Remove
             </button>
-            <a v-else :href="`https://app.intercom.io/oauth?client_id=15329d68-6aaf-47ab-84ad-09d8d73f97be&state=${account.domain}`">
+            <a v-else :href="`https://app.intercom.io/oauth?client_id=${env.INTERCOM_CLIENT_ID}&state=${account.domain}`">
               <img src="https://static.intercomassets.com/assets/oauth/primary-7edb2ebce84c088063f4b86049747c3a.png" srcset="https://static.intercomassets.com/assets/oauth/primary-7edb2ebce84c088063f4b86049747c3a.png 1x, https://static.intercomassets.com/assets/oauth/primary@2x-0d69ca2141dfdfa0535634610be80994.png 2x, https://static.intercomassets.com/assets/oauth/primary@3x-788ed3c44d63a6aec3927285e920f542.png 3x">
             </a>
           </div>
@@ -28,7 +28,7 @@
             <button v-if="account.stripeToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('stripe')">
               Remove
             </button>
-            <a v-else :href="`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=ca_BgrkpPIf88dSDrpE7D4DVBkn91zFipuB&scope=read_write&state=${account.domain}`">
+            <a v-else :href="`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${env.STRIPE_CLIENT_ID}B&scope=read_write&state=${account.domain}`">
               <img src="/img/stripe-connect-button.png" srcset="/img/stripe-connect-button.png 1x, /img/stripe-connect-button@2x.png 2x, /img/stripe-connect-button@3x.png 3x" alt="Connect with Stripe" class="h-full w-full">
             </a>
           </div>
@@ -40,10 +40,10 @@
         <div class="sm:flex sm:justify-between sm:items-center">
           <p class="sm:flex-1  mb-2 sm:mb-0">This integration lets you access Google Analytics to view your website traffic.</p>
           <div class="w-40 flex justify-end">
-            <button v-if="account.googleAccessToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
+            <button v-if="account.googleRefreshToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('google')">
               Remove
             </button>
-            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly&response_type=code&client_id=443756474293-52neei2difkt7lc3r703g2u20uhjevoi.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fgoogle&state=${account.domain}&prompt=consent`">
+            <a v-else :href="`https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly&response_type=code&client_id=${env.GOOGLE_CLIENT_ID}&redirect_uri=${getRedirectURI('/oauth/google')}&state=${account.domain}&prompt=consent`">
               <img src="/img/google-sign-in-button.png" srcset="/img/google-sign-in-button.png 1x, /img/google-sign-in-button@2x.png 2x" alt="Sign in with Google" class="h-full w-full">
             </a>
           </div>
@@ -58,15 +58,15 @@
             <button v-if="account.sendgridToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('sendgrid')">
               Remove
             </button>
-            <button v-else class="px-3 py-2 rounded ml-4 bg-blue text-white" @click.prevent="displayModal('sendgridModal')">
+            <button v-else class="px-3 py-2 rounded ml-4 bg-blue text-white" @click.prevent="$openModal('provideSendgridToken')">
               Add Sendgrid
             </button>
           </div>
-          <Modal :visible="sendgridModal.visible" title="Sendgrid API Key" @hide="sendgridModal.visible = false">
+          <Modal ref="provideSendgridToken" title="Sendgrid API Key">
             <form class="flex items-center mb-4">
               <label for="sendgridToken" class="mr-2">API Key:</label>
               <input v-model="sendgridToken" name="sendgridToken" class="flex-1 p-2 rounded bg-grey-lighter">
-              <button :style="`background-color: ${dashboard.primaryColor}`" type="submit" class="px-3 py-2 rounded ml-2 bg-blue text-white" @click.prevent="addIntegration('sendgrid', sendgridToken); hideModal('sendgridModal')">
+              <button :style="`background-color: ${dashboard.primaryColor}`" type="submit" class="px-3 py-2 rounded ml-2 bg-blue text-white" @click.prevent="addIntegration('sendgrid', sendgridToken); $closeModal('provideSendgridToken')">
                 Submit
               </button>
             </form>
@@ -83,7 +83,7 @@
             <button v-if="account.eventbriteToken" type="submit" class="px-3 py-2 rounded ml-4 bg-red-dark text-white" @click.prevent="removeIntegration('eventbrite')">
               Remove
             </button>
-            <a v-else :href="`https://www.eventbrite.com/oauth/authorize?response_type=token&client_id=KZKTUHCEQUG4KT7Z3R&state=${account.domain}`" class="px-3 py-2 rounded ml-4 bg-blue text-white no-underline">
+            <a v-else :href="`https://www.eventbrite.com/oauth/authorize?response_type=token&client_id=${env.EVENTBRITE_CLIENT_ID}&state=${account.domain}`" class="px-3 py-2 rounded ml-4 bg-blue text-white no-underline">
               Add Eventbrite
             </a>
           </div>
@@ -95,8 +95,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import setToken from '~/apollo/mutations/setToken'
-import unsetToken from '~/apollo/mutations/unsetToken'
+import updateAccount from '~/apollo/mutations/updateAccount'
 import Card from '~/components/Card'
 import Modal from '~/components/Modal'
 
@@ -114,7 +113,17 @@ export default {
       sendgridToken: null
     }
   },
-  computed: mapGetters(['account', 'dashboard']),
+  computed: {
+    env() {
+      return {
+        EVENTBRITE_CLIENT_ID: process.env.EVENTBRITE_CLIENT_ID,
+        GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+        INTERCOM_CLIENT_ID: process.env.INTERCOM_CLIENT_ID,
+        STRIPE_CLIENT_ID: process.env.STRIPE_CLIENT_ID
+      }
+    },
+    ...mapGetters(['account', 'dashboard'])
+  },
   beforeCreate() {
     this.$store.commit('setPageTitle', 'Integrations')
   },
@@ -122,9 +131,11 @@ export default {
     addIntegration(provider, token) {
       this.$apollo
         .mutate({
-          mutation: setToken,
+          mutation: updateAccount,
           variables: {
-            domain: this.account.domain,
+            where: {
+              id: this.account.id
+            },
             data: {
               [`${provider}Token`]: token
             }
@@ -132,7 +143,7 @@ export default {
         })
         .then(response => {
           this.$store.commit('setToken', provider, token)
-          window.location = '/integrations'
+          window.location.reload()
         })
         .catch(error => console.error(error))
     },
@@ -150,20 +161,21 @@ export default {
       }
       this.$apollo
         .mutate({
-          mutation: unsetToken,
+          mutation: updateAccount,
           variables: {
-            domain: this.account.domain,
+            where: {
+              id: this.account.id
+            },
             data
           }
         })
         .then(response => this.$store.commit('unsetToken', provider))
         .catch(error => console.error(error))
     },
-    displayModal(modal) {
-      this[modal].visible = true
-    },
-    hideModal(modal) {
-      this[modal].visible = false
+    getRedirectURI(path) {
+      const scheme =
+        this.account.domain === 'localhost:3000' ? 'http://' : 'https://'
+      return scheme.concat(this.account.domain, path ? path : '/integrations')
     }
   }
 }

@@ -1,9 +1,9 @@
 import axios from 'axios'
-import setToken from '~/apollo/mutations/setToken'
+import updateAccount from '~/apollo/mutations/updateAccount'
 
 export default async function({ query, app, redirect }) {
   await axios({
-    url: 'https://api.3xw.app/rest/google/oauth/authenticate',
+    url: `${process.env.REST_API_ENDPOINT}/rest/google/oauth/authenticate`,
     method: 'post',
     data: {
       code: query.code
@@ -12,9 +12,11 @@ export default async function({ query, app, redirect }) {
     .then(response => {
       console.log('Response data:', response.data)
       app.apolloProvider.clients.defaultClient.mutate({
-        mutation: setToken,
+        mutation: updateAccount,
         variables: {
-          domain: query.state,
+          where: {
+            domain: query.state
+          },
           data: {
             googleAccessToken: response.data.access_token,
             googleRefreshToken: response.data.refresh_token

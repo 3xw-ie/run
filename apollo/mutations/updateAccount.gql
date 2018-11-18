@@ -1,12 +1,10 @@
-mutation unsetToken ($domain: String!, $data: AccountUpdateInput!) {
+mutation updateAccount ($where: AccountWhereUniqueInput! $data: AccountUpdateInput!) {
   updateAccount(
     data: $data
-    where:{
-     domain: $domain 
-    }
+    where: $where
   ) {
     name
-    domain
+    id
     eventbriteToken
     googleAccessToken
     googleRefreshToken

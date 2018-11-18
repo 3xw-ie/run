@@ -9,6 +9,8 @@ const helpers = {
       if (!this.$refs[ref])
         return console.error(`Modal with ref '${ref}' not found.`)
 
+      console.log(this.$refs[ref])
+
       return (this.$refs[ref].visible = true)
     }
 

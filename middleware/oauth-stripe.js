@@ -1,5 +1,5 @@
 import axios from 'axios'
-import setToken from '~/apollo/mutations/setToken'
+import updateAccount from '~/apollo/mutations/updateAccount'
 
 export default async function({ query, app, redirect }) {
   await axios({
@@ -13,9 +13,11 @@ export default async function({ query, app, redirect }) {
   })
     .then(response => {
       app.apolloProvider.clients.defaultClient.mutate({
-        mutation: setToken,
+        mutation: updateAccount,
         variables: {
-          domain: query.state,
+          where: {
+            domain: query.state
+          },
           data: {
             stripeToken: response.data.access_token
           }

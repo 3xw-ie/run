@@ -4,7 +4,7 @@
       <nuxt-link to="/stripe" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Stripe</nuxt-link>
       <Card class="overflow-x-scroll">
         <h2 class="mb-4">Charges</h2>
-        <table v-if="!loading && charges.data">
+        <table v-if="charges.data">
           <thead class="text-left">
             <tr>
               <th>Status</th>
@@ -25,19 +25,19 @@
               <td class="pr-8">{{ charge.created | moment('Do MMM YYYY') }}</td>
               <td class="pr-8">
                 {{ charge.customer && customers.data ? findCustomer(charge.customer).email : (charge.source.name ? charge.source.name : 'n/a') }}
-                <button v-if="!charge.customer" :style="'background-color:' + dashboard.primaryColor" class="rounded ml-2 px-2 py-1 bg-blue text-white text-xs" @click="openLinkCustomerModal(charge)">+ Link customer</button>
+                <button v-if="!charge.customer" :style="'background-color:' + dashboard.primaryColor" class="rounded px-2 py-1 bg-blue text-white text-xs" @click="openLinkCustomerModal(charge)">+ Link customer</button>
               </td>
               <td>
-                <button v-if="charge.customer && !charge.receipt_email" :style="'background-color:' + dashboard.primaryColor" class="rounded ml-2 px-2 py-1 bg-blue text-white text-xs" @click="sendReceipt(charge)">Send Receipt</button>
+                <button v-if="charge.customer && !charge.receipt_email" :style="'background-color:' + dashboard.primaryColor" class="rounded px-2 py-1 bg-blue text-white text-xs" @click="sendReceipt(charge)">Send Receipt</button>
                 <span v-if="charge.receipt_email" class="inline-block text-center p-1 rounded bg-grey-lighter text-grey-darker text-xs">Sent</span>
               </td>
             </tr>
           </tbody>
         </table>
-        <p v-else>Loading...</p>
+        <p v-if="loading">Loading...</p>
       </Card>
     </section>
-    <Modal :visible="chargeModal.visible" :title="`Charge ${chargeModal.data.charge.id}`" @hide="chargeModal.visible = false">
+    <Modal ref="chargeModal" :title="`Charge ${chargeModal.data.charge.id}`">
       <form v-if="chargeModal.data">
         <label for="customer">Customer</label>
         <select v-model="chargeModal.data.customer" name="customer" class="mb-2">
@@ -93,10 +93,10 @@ export default {
         customers: this.customers.data,
         customer: null
       }
-      this.chargeModal.visible = true
+      this.$openModal('chargeModal')
     },
     closeLinkCustomerModal(charge, customer) {
-      this.chargeModal.visible = false
+      this.$closeModal('chargeModal')
       this.chargeModal.data.customer = null
     }
   }

@@ -1,4 +1,4 @@
-const pkg = require('./package')
+require('dotenv').config()
 
 module.exports = {
   mode: 'universal',
@@ -11,7 +11,7 @@ module.exports = {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      { hid: 'description', name: 'description', content: 'Run your business.' }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
@@ -28,8 +28,6 @@ module.exports = {
     middleware: 'check-auth'
   },
 
-  // serverMiddleware: ['~/server-middleware/logger'],
-
   /*
   ** Global CSS
   */
@@ -43,7 +41,12 @@ module.exports = {
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/axios', '@nuxtjs/apollo', '@nuxtjs/proxy'],
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/apollo',
+    '@nuxtjs/dotenv',
+    '@nuxtjs/proxy'
+  ],
 
   apollo: {
     clientConfigs: {
@@ -53,13 +56,6 @@ module.exports = {
 
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
-  },
-
-  proxy: {
-    '/api/intercom/': {
-      target: 'https://api.intercom.io/',
-      pathRewrite: { '/api/intercom/': '' }
-    }
   },
 
   /*
@@ -86,6 +82,7 @@ module.exports = {
   ** Environement variables
   */
   env: {
+    REST_API_ENDPOINT: process.env.REST_API_ENDPOINT || 'https://api.3xw.app',
     AUTH0_CLIENT_ID: 'c23KsgIcNFWigpLYPqa3P3VpU5ehc2K0',
     AUTH0_CLIENT_DOMAIN: '3xw.eu.auth0.com'
   }

@@ -7,7 +7,7 @@ const google = {
     googleConfig() {
       return {
         headers: {
-          Authorization: `Bearer ${this.account.googleAccessToken}`
+          Authorization: `Bearer ${this.account.id}`
         }
       }
     },
@@ -17,25 +17,12 @@ const google = {
     async getGoogleAnalyticsData(viewId, range, expression) {
       this.updateStatus('loading')
       await this.$axios({
-        url: 'https://analyticsreporting.googleapis.com/v4/reports:batchGet',
+        url: `${process.env.REST_API_ENDPOINT}/rest/google/analytics/batchGet`,
         method: 'post',
         data: {
-          reportRequests: [
-            {
-              viewId,
-              dateRanges: [
-                {
-                  startDate: range.startDate,
-                  endDate: range.endDate
-                }
-              ],
-              metrics: [
-                {
-                  expression
-                }
-              ]
-            }
-          ]
+          viewId,
+          range,
+          expression
         },
         ...this.googleConfig
       })
@@ -45,10 +32,7 @@ const google = {
         })
         .catch(error => {
           console.error(error)
-          this.updateStatus(
-            'error',
-            'Please try removing the Google integration and signing in with Google again.'
-          )
+          this.updateStatus('error')
         })
     },
     updateGoogleAnalyticsData() {

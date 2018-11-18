@@ -1,6 +1,5 @@
 import status from '~/plugins/status'
 import { mapGetters } from 'vuex'
-import queryString from 'query-string'
 
 const stripe = {
   mixins: [status],
@@ -13,7 +12,7 @@ const stripe = {
   computed: {
     stripeConfig() {
       return {
-        baseURL: 'https://api.3xw.app/rest/stripe',
+        baseURL: `${process.env.REST_API_ENDPOINT}/rest/stripe`,
         headers: {
           Authorization: `Bearer ${this.account.id}`
         }
@@ -80,11 +79,31 @@ const stripe = {
       await this.$axios({
         url: '/customers',
         method: 'post',
-        data: queryString.stringify(this.customer),
+        data: this.customer,
         ...this.stripeConfig
       })
         .then(response => {
-          this.customers.data.push(response.data)
+          this.customers.data.unshift(response.data)
+          this.customer = {
+            email: null,
+            description: null
+          }
+          this.updateStatus('success')
+        })
+        .catch(error => {
+          console.error(error)
+          this.updateStatus('error')
+        })
+    },
+    async deleteStripeCustomer(customer) {
+      this.updateStatus('loading')
+      await this.$axios({
+        url: `/customers/${customer.id}`,
+        method: 'delete',
+        ...this.stripeConfig
+      })
+        .then(response => {
+          this.customers.data.splice(this.findCustomerIndex(customer.id), 1)
           this.customer = {
             email: null,
             description: null
@@ -123,16 +142,13 @@ const stripe = {
       return this.customers.data.findIndex(customer => customer.id === id)
     },
     linkCustomer(charge, customer) {
-      this.updateStripeCharge(charge, queryString.stringify({ customer }))
+      this.updateStripeCharge(charge, { customer })
     },
     sendReceipt(charge) {
       charge.receipt_email = this.findCustomer(charge.customer).email
-      this.updateStripeCharge(
-        charge,
-        queryString.stringify({
-          receipt_email: charge.receipt_email
-        })
-      )
+      this.updateStripeCharge(charge, {
+        receipt_email: charge.receipt_email
+      })
     }
   }
 }

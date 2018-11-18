@@ -6,7 +6,7 @@
 
 <script>
 import { getQueryParams } from '~/utils/auth'
-import setToken from '~/apollo/mutations/setToken'
+import updateAccount from '~/apollo/mutations/updateAccount'
 
 export default {
   layout: 'empty',
@@ -21,9 +21,11 @@ export default {
     console.log(this.hash)
     this.$apollo
       .mutate({
-        mutation: setToken,
+        mutation: updateAccount,
         variables: {
-          domain: this.hash.state,
+          where: {
+            domain: this.hash.state
+          },
           data: {
             eventbriteToken: this.hash.access_token
           }

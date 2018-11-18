@@ -4,12 +4,13 @@
       <nuxt-link to="/stripe" class="inline-block mb-2 text-inherit no-underline">&larr; Back to Stripe</nuxt-link>
       <Card class="mb-4 overflow-x-scroll">
         <h2 class="mb-4">Customers</h2>
-        <table v-if="!loading && customers">
+        <table v-if="customers.data">
           <thead class="text-left">
             <tr>
               <th>Email</th>
               <th>Description</th>
               <th>Created</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -19,10 +20,23 @@
               </td>
               <td class="pr-8">{{ customer.description }}</td>
               <td class="pr-8">{{ customer.created | moment('Do MMM YYYY') }}</td>
+              <td>
+                <button class="rounded px-2 py-1 bg-red text-white text-xs" @click.prevent="selectedCustomer = customer; $openModal('confirmDeleteStripeCustomer')">Delete</button>
+              </td>
             </tr>
           </tbody>
         </table>
-        <p v-else>Loading...</p>
+        <Modal ref="confirmDeleteStripeCustomer" title="Are you sure?">
+          <p class="mb-2">You are about to delete Customer:</p>
+          <ul>
+            <li>ID: {{ selectedCustomer.id }}</li>
+            <li>Email: {{ selectedCustomer.email }}</li>
+            <li>Description: {{ selectedCustomer.description }}</li>
+          </ul>
+          <button class="px-3 py-2 rounded my-4 bg-red text-white border border-transparent" @click.prevent="deleteStripeCustomer(selectedCustomer); $closeModal('confirmDeleteStripeCustomer')">Delete</button>
+          <button type="submit" class="px-3 py-2 rounded my-4 border border-black mr-2" @click.prevent="$closeModal('confirmDeleteStripeCustomer')">Cancel</button>
+        </Modal>
+        <p v-if="loading">Loading...</p>
       </Card>
       <Card>
         <h2 class="mb-4">Create a customer</h2>
@@ -48,11 +62,13 @@
 import { mapGetters } from 'vuex'
 import stripe from '~/plugins/stripe'
 import Card from '~/components/Card'
+import Modal from '~/components/Modal'
 
 export default {
   layout: 'dashboard',
   components: {
-    Card
+    Card,
+    Modal
   },
   mixins: [stripe],
   data() {
@@ -60,6 +76,9 @@ export default {
       customer: {
         email: null,
         description: null
+      },
+      selectedCustomer: {
+        id: null
       }
     }
   },
