@@ -5,6 +5,7 @@
       :key="link.url"
       :href="link.url"
       target="_blank"
+      rel="noopener"
       class="w-1/2 block leading-normal text-blue no-underline"
     >
       {{ link.text }}
