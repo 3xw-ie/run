@@ -12,7 +12,6 @@ export default async function({ query, app, redirect }) {
     }
   })
     .then(response => {
-      console.log(response)
       app.apolloProvider.clients.defaultClient.mutate({
         mutation: updateAccount,
         variables: {
